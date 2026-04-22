@@ -26,10 +26,14 @@ export function ProfileCreateForm() {
       await createProfile.mutateAsync(trimmedName);
       setName("");
       setIsCreating(false);
-      toast.success("Profile created", `Profile "${trimmedName}" has been created.`);
+
+      toast.success(
+        "Profil créé",
+        `Le profil "${trimmedName}" a été créé avec succès.`,
+      );
     } catch (error: unknown) {
       toast.error(
-        "Failed to create profile",
+        "Erreur",
         error instanceof Error ? error.message : String(error),
       );
     }
@@ -57,7 +61,7 @@ export function ProfileCreateForm() {
         left={<Plus className="h-4 w-4" />}
         className="w-full justify-start"
       >
-        New Profile
+        Nouveau profil
       </Button>
     );
   }
@@ -71,8 +75,9 @@ export function ProfileCreateForm() {
         onChange={(e) => setName(e.target.value)}
         onKeyDown={handleKeyDown}
         className="h-7 flex-1 px-2 py-1 text-sm"
-        placeholder="Profile name..."
+        placeholder="Nom du profil..."
       />
+
       <IconButton
         icon={<Check className="h-4 w-4" />}
         variant="ghost"
@@ -82,6 +87,7 @@ export function ProfileCreateForm() {
         loading={createProfile.isPending}
         className="text-green-400 hover:text-green-300"
       />
+
       <IconButton
         icon={<X className="h-4 w-4" />}
         variant="ghost"

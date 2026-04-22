@@ -10,21 +10,24 @@ interface WatcherSectionProps {
 
 export function WatcherSection({ settings, onSave }: WatcherSectionProps) {
   return (
-    <SectionCard title="Library Watcher" icon={<Eye className="h-5 w-5" />}>
+    <SectionCard title="Surveillance de la bibliothèque" icon={<Eye className="h-5 w-5" />}>
       <div className="space-y-3">
-        <AlertBox variant="warning" title="Experimental feature">
-          The library watcher may behave unexpectedly on some system configurations. File system
-          notifications can vary across platforms and antivirus software, which may cause false
-          triggers or missed updates.
+        <AlertBox variant="warning" title="Fonctionnalité expérimentale">
+          La surveillance de la bibliothèque peut se comporter de manière imprévisible selon la
+          configuration de votre système. Les notifications du système de fichiers varient selon les
+          plateformes et les antivirus, ce qui peut entraîner des détections incorrectes ou des
+          mises à jour manquées.
         </AlertBox>
+
         <label className="flex items-center justify-between gap-4">
           <div>
             <span className="block text-sm font-medium text-surface-200">
-              Watch for external changes
+              Surveiller les modifications externes
             </span>
             <span className="block text-sm text-surface-400">
-              Automatically detect when mod files are added or removed outside the app and update
-              the library. Requires a restart to take effect.
+              Détecte automatiquement lorsque des fichiers de mods sont ajoutés ou supprimés en
+              dehors de l'application et met à jour la bibliothèque. Nécessite un redémarrage pour
+              être pris en compte.
             </span>
           </div>
           <Switch

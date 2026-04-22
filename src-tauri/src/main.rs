@@ -37,7 +37,6 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_autostart::Builder::new().build())
@@ -46,12 +45,14 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             // App
             commands::get_app_info,
+            commands::get_platform_support,
             // Settings
             commands::get_settings,
             commands::save_settings,
             commands::auto_detect_league_path,
             commands::validate_league_path,
             commands::check_setup_required,
+            commands::list_available_wads,
             // Mods
             commands::get_installed_mods,
             commands::install_mod,
@@ -104,6 +105,7 @@ fn main() {
             commands::get_workshop_projects,
             commands::create_workshop_project,
             commands::get_workshop_project,
+            commands::get_project_content_tree,
             commands::save_project_config,
             commands::rename_workshop_project,
             commands::delete_workshop_project,
@@ -117,7 +119,10 @@ fn main() {
             commands::remove_project_thumbnail,
             commands::get_project_thumbnail,
             commands::save_layer_string_overrides,
+            commands::get_layer_content_path,
+            commands::get_layer_info,
             commands::create_project_layer,
+            commands::rename_project_layer,
             commands::delete_project_layer,
             commands::reorder_project_layers,
             commands::update_layer_description,

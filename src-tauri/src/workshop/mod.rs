@@ -1,6 +1,9 @@
+mod content;
 mod layers;
 mod packing;
 mod projects;
+
+pub use content::ContentTree;
 
 use crate::error::{AppError, AppResult};
 use crate::state::Settings;
@@ -84,10 +87,39 @@ pub struct WorkshopAuthor {
 #[serde(rename_all = "camelCase")]
 pub struct WorkshopLayer {
     pub name: String,
+    pub display_name: String,
     pub priority: i32,
     pub description: Option<String>,
     #[serde(default)]
     pub string_overrides: HashMap<String, HashMap<String, String>>,
+}
+
+/// Runtime info about a layer's content directory, fetched separately from config.
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[ts(export)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkshopLayerInfo {
+    pub wad_files: Vec<String>,
+}
+
+/// Derive a human-readable display name from a slug.
+///
+/// Splits on hyphens and capitalizes the first letter of each word.
+/// Example: `"high-res"` → `"High Res"`, `"base"` → `"Base"`
+pub(crate) fn slug_to_display_name(slug: &str) -> String {
+    slug.split('-')
+        .map(|word| {
+            let mut chars = word.chars();
+            match chars.next() {
+                Some(c) => {
+                    let upper: String = c.to_uppercase().collect();
+                    format!("{}{}", upper, chars.as_str())
+                }
+                None => String::new(),
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 /// Metadata peeked from a .fantome archive without extracting content.
@@ -246,26 +278,11 @@ pub(crate) fn find_config_file(project_dir: &Path) -> Option<PathBuf> {
     None
 }
 
-pub(crate) fn load_mod_project(config_path: &Path) -> AppResult<ModProject> {
-    let contents = fs::read_to_string(config_path)?;
-
-    let is_toml = config_path
-        .extension()
-        .map(|e| e == "toml")
-        .unwrap_or(false);
-
-    if is_toml {
-        toml::from_str(&contents).map_err(|e| AppError::Other(e.to_string()))
-    } else {
-        serde_json::from_str(&contents).map_err(AppError::from)
-    }
-}
-
 pub(crate) fn load_workshop_project(project_dir: &Path) -> AppResult<WorkshopProject> {
     let config_path = find_config_file(project_dir)
         .ok_or_else(|| AppError::ProjectNotFound(project_dir.display().to_string()))?;
 
-    let mod_project = load_mod_project(&config_path)?;
+    let mod_project = ModProject::load_from_file(&config_path)?;
 
     let metadata = fs::metadata(&config_path)?;
     let last_modified = metadata
@@ -300,6 +317,10 @@ pub(crate) fn load_workshop_project(project_dir: &Path) -> AppResult<WorkshopPro
         .layers
         .iter()
         .map(|l| WorkshopLayer {
+            display_name: l
+                .display_name
+                .clone()
+                .unwrap_or_else(|| slug_to_display_name(&l.name)),
             name: l.name.clone(),
             priority: l.priority,
             description: l.description.clone(),

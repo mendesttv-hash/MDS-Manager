@@ -12,11 +12,14 @@ interface LibraryFilterStore {
   selectedTags: Set<string>;
   selectedChampions: Set<string>;
   selectedMaps: Set<string>;
+  favoritesOnly: boolean;
   sort: SortConfig;
 
   toggleTag: (tag: string) => void;
   toggleChampion: (champion: string) => void;
   toggleMap: (map: string) => void;
+  toggleFavoritesOnly: () => void;
+  setFavoritesOnly: (value: boolean) => void;
   setTags: (tags: Set<string>) => void;
   setChampions: (champions: Set<string>) => void;
   setMaps: (maps: Set<string>) => void;
@@ -28,7 +31,8 @@ export const useLibraryFilterStore = create<LibraryFilterStore>((set) => ({
   selectedTags: new Set(),
   selectedChampions: new Set(),
   selectedMaps: new Set(),
-  sort: { field: "priority", direction: "desc" },
+  favoritesOnly: false,
+  sort: { field: "name", direction: "asc" },
 
   toggleTag: (tag) =>
     set((state) => {
@@ -54,6 +58,13 @@ export const useLibraryFilterStore = create<LibraryFilterStore>((set) => ({
       return { selectedMaps: next };
     }),
 
+  toggleFavoritesOnly: () =>
+    set((state) => ({
+      favoritesOnly: !state.favoritesOnly,
+    })),
+
+  setFavoritesOnly: (value) => set({ favoritesOnly: value }),
+
   setTags: (tags) => set({ selectedTags: new Set(tags) }),
   setChampions: (champions) => set({ selectedChampions: new Set(champions) }),
   setMaps: (maps) => set({ selectedMaps: new Set(maps) }),
@@ -63,6 +74,7 @@ export const useLibraryFilterStore = create<LibraryFilterStore>((set) => ({
       selectedTags: new Set(),
       selectedChampions: new Set(),
       selectedMaps: new Set(),
+      favoritesOnly: false,
     }),
 
   setSort: (sort) => set({ sort }),
@@ -70,6 +82,10 @@ export const useLibraryFilterStore = create<LibraryFilterStore>((set) => ({
 
 export function useHasActiveFilters() {
   return useLibraryFilterStore(
-    (s) => s.selectedTags.size > 0 || s.selectedChampions.size > 0 || s.selectedMaps.size > 0,
+    (s) =>
+      s.selectedTags.size > 0 ||
+      s.selectedChampions.size > 0 ||
+      s.selectedMaps.size > 0 ||
+      s.favoritesOnly,
   );
 }

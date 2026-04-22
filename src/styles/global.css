@@ -4,7 +4,7 @@
 
 /* Accent color presets (HSL hues for generating color scales) */
 :root {
-  --accent-hue: 207; /* Default: Blue */
+  --accent-hue: 271; /* Default: Blue */
   --accent-saturation: 100%;
 
   /* Accent color preset hues */
@@ -24,16 +24,16 @@
   --surface-900-rgb: 28 28 31;
 
   /* Background colors — layered with visible depth steps */
-  --surface-950: #141416; /* Deepest — titlebar, status bar */
-  --surface-900: #1c1c1f; /* Base background */
-  --surface-800: #242428; /* Toolbars, sidebars, cards */
-  --surface-700: #2c2c32; /* Inputs, hover backgrounds */
-  --surface-600: #3a3a42; /* Borders, dividers */
-  --surface-500: #4a4a52; /* Muted elements */
-  --surface-400: #85858f; /* Placeholder text */
-  --surface-300: #a0a0aa; /* Secondary text */
-  --surface-200: #d4d4d8; /* Primary text */
-  --surface-100: #ededf0; /* Bright text */
+  --surface-950: #0a0d14;
+--surface-900: #0f1320;
+--surface-800: #151a2b;
+--surface-700: #1d2338;
+--surface-600: #2a3150;
+--surface-500: #4b567d;
+--surface-400: #8a93b8;
+--surface-300: #b5bddb;
+--surface-200: #dde3f7;
+--surface-100: #f4f6ff;
   --surface-50: #fafafa; /* White text */
 
   /* ---- Design Token Scales ---- */
@@ -317,4 +317,11 @@ body {
 
 .backdrop-active ::-webkit-scrollbar-track {
   background-color: transparent;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(168,85,247,0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(59,130,246,0.12), transparent 40%),
+    #0b0f1a;
 }

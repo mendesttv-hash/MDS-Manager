@@ -1,10 +1,17 @@
-import { invoke } from "@tauri-apps/api/core";
-import { Calendar, FolderOpen, Layers, Map, Sword, Tag, User } from "lucide-react";
+import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+import { open } from "@tauri-apps/plugin-dialog";
+import { Calendar, FolderOpen, ImagePlus, Layers, Map, Pencil, Sword, Tag, User } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Button, Dialog } from "@/components";
 import type { InstalledMod } from "@/lib/tauri";
 import { useSetModLayers } from "@/modules/library/api";
 import { useModThumbnail } from "@/modules/library/api/useModThumbnail";
+import {
+  clearCustomModImage,
+  getCustomModMeta,
+  setCustomModMeta,
+} from "@/modules/library/utils/customModMeta";
 import { getMapLabel, getTagLabel } from "@/modules/library/utils/labels";
 
 import { LayerToggleList } from "./LayerToggleList";
@@ -19,12 +26,12 @@ export function ModDetailsDialog({ open, mod, onClose }: ModDetailsDialogProps) 
   if (!mod) return null;
 
   return (
-    <Dialog.Root open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog.Root open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Overlay size="md">
           <Dialog.Header>
-            <Dialog.Title>{mod.displayName}</Dialog.Title>
+            <Dialog.Title>Modifier le mod</Dialog.Title>
             <Dialog.Close />
           </Dialog.Header>
 
@@ -34,7 +41,7 @@ export function ModDetailsDialog({ open, mod, onClose }: ModDetailsDialogProps) 
 
           <Dialog.Footer>
             <Button variant="ghost" onClick={onClose}>
-              Close
+              Fermer
             </Button>
             <Button
               variant="filled"
@@ -47,7 +54,7 @@ export function ModDetailsDialog({ open, mod, onClose }: ModDetailsDialogProps) 
                 }
               }}
             >
-              Open Location
+              Ouvrir l’emplacement
             </Button>
           </Dialog.Footer>
         </Dialog.Overlay>
@@ -58,6 +65,18 @@ export function ModDetailsDialog({ open, mod, onClose }: ModDetailsDialogProps) 
 
 function ModDetailsContent({ mod }: { mod: InstalledMod }) {
   const { data: thumbnailUrl } = useModThumbnail(mod.id);
+  const customMeta = getCustomModMeta(mod.id);
+
+  const [customTitle, setCustomTitle] = useState(customMeta.customTitle ?? "");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const nextMeta = getCustomModMeta(mod.id);
+    setCustomTitle(nextMeta.customTitle ?? "");
+  }, [mod.id]);
+
+  const displayTitle = customTitle.trim() || mod.displayName;
+  const displayImage = customMeta.customImage ? convertFileSrc(customMeta.customImage) : thumbnailUrl;
 
   const installedDate = new Date(mod.installedAt).toLocaleDateString(undefined, {
     year: "numeric",
@@ -65,31 +84,90 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
     day: "numeric",
   });
 
+  async function handleChooseImage() {
+    const selected = await open({
+      multiple: false,
+      directory: false,
+      filters: [
+        {
+          name: "Images",
+          extensions: ["png", "jpg", "jpeg", "webp"],
+        },
+      ],
+    });
+
+    if (!selected || Array.isArray(selected)) return;
+
+    setCustomModMeta(mod.id, { customImage: selected });
+    setRefreshKey((v) => v + 1);
+  }
+
+  function handleSaveTitle() {
+    setCustomModMeta(mod.id, { customTitle: customTitle.trim() });
+    setRefreshKey((v) => v + 1);
+  }
+
+  function handleResetImage() {
+    clearCustomModImage(mod.id);
+    setRefreshKey((v) => v + 1);
+  }
+
   return (
-    <>
-      {/* Thumbnail + basic info */}
+    <div key={refreshKey} className="space-y-5">
       <div className="flex gap-4">
-        <div className="relative h-20 w-[8.75rem] shrink-0 overflow-hidden rounded-lg bg-linear-to-br from-surface-700 to-surface-800">
-          {thumbnailUrl ? (
+        <div className="relative h-24 w-[10rem] shrink-0 overflow-hidden rounded-xl bg-linear-to-br from-surface-700 to-surface-800">
+          {displayImage ? (
             <img
-              src={thumbnailUrl}
+              src={displayImage}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <span className="text-2xl font-bold text-surface-500">
-                {mod.displayName.charAt(0).toUpperCase()}
+              <span className="text-3xl font-bold text-surface-500">
+                {displayTitle.charAt(0).toUpperCase()}
               </span>
             </div>
           )}
         </div>
-        <div className="min-w-0 flex-1 space-y-1">
+
+        <div className="min-w-0 flex-1 space-y-3">
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-xs font-medium tracking-wide text-surface-500 uppercase">
+              <Pencil className="h-3.5 w-3.5" />
+              Titre personnalisé
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customTitle}
+                onChange={(e) => setCustomTitle(e.target.value)}
+                placeholder={mod.displayName}
+                className="w-full rounded-lg border border-surface-600 bg-surface-800 px-3 py-2 text-surface-100 outline-none focus:border-accent-500"
+              />
+              <Button variant="filled" onClick={handleSaveTitle}>
+                Sauver
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button variant="outline" left={<ImagePlus className="h-4 w-4" />} onClick={handleChooseImage}>
+              Choisir une image
+            </Button>
+
+            <Button variant="ghost" onClick={handleResetImage}>
+              Retirer l’image
+            </Button>
+          </div>
+
           <p className="text-sm text-surface-400">v{mod.version}</p>
+
           <div className="flex items-center gap-1.5 text-sm text-surface-400">
             <User className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{mod.authors.join(", ") || "Unknown author"}</span>
           </div>
+
           <div className="flex items-center gap-1.5 text-sm text-surface-400">
             <Calendar className="h-3.5 w-3.5 shrink-0" />
             <span>Installed {installedDate}</span>
@@ -97,7 +175,6 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
         </div>
       </div>
 
-      {/* Description */}
       {mod.description && (
         <div>
           <h4 className="mb-1 text-xs font-medium tracking-wide text-surface-500 uppercase">
@@ -107,7 +184,6 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
         </div>
       )}
 
-      {/* Tags */}
       {mod.tags.length > 0 && (
         <div>
           <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-surface-500 uppercase">
@@ -127,7 +203,6 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
         </div>
       )}
 
-      {/* Champions */}
       {mod.champions.length > 0 && (
         <div>
           <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-surface-500 uppercase">
@@ -147,7 +222,6 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
         </div>
       )}
 
-      {/* Maps */}
       {mod.maps.length > 0 && (
         <div>
           <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-surface-500 uppercase">
@@ -167,17 +241,15 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
         </div>
       )}
 
-      {/* Layers */}
       {mod.layers.length > 1 && <ModDetailsLayers mod={mod} />}
 
-      {/* File path */}
       <div>
         <h4 className="mb-1 text-xs font-medium tracking-wide text-surface-500 uppercase">
           Location
         </h4>
         <p className="text-xs break-all text-surface-400">{mod.modDir}</p>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -19,7 +19,7 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
   async function handleBrowse() {
     try {
       const selected = await open({
-        title: "Select Background Image",
+        title: "Sélectionner une image de fond",
         filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }],
       });
 
@@ -27,7 +27,7 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
         onSave({ ...settings, backdropImage: selected as string });
       }
     } catch (error) {
-      console.error("Failed to browse:", error);
+      console.error("Erreur lors de la sélection :", error);
     }
   }
 
@@ -37,16 +37,20 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
 
   return (
     <div className="space-y-3">
-      <span className="block text-sm font-medium text-surface-400">Background Image</span>
+      <span className="block text-sm font-medium text-surface-400">
+        Image de fond
+      </span>
+
       <div className="flex gap-2">
         <Field.Control
           type="text"
           value={settings.backdropImage || ""}
           readOnly
-          placeholder="No image selected"
+          placeholder="Aucune image sélectionnée"
           className="flex-1"
         />
-        <Tooltip content="Browse image">
+
+        <Tooltip content="Parcourir une image">
           <IconButton
             icon={<Image className="h-5 w-5" />}
             variant="outline"
@@ -54,8 +58,9 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
             onClick={handleBrowse}
           />
         </Tooltip>
+
         {settings.backdropImage && (
-          <Tooltip content="Clear image">
+          <Tooltip content="Supprimer l’image">
             <IconButton
               icon={<X className="h-5 w-5" />}
               variant="outline"
@@ -65,18 +70,19 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
           </Tooltip>
         )}
       </div>
+
       <p className="text-sm text-surface-500">
-        Set a background image for the app. The UI will render with a frosted glass effect over the
-        image.
+        Définissez une image de fond pour l’application. L’interface utilisera un effet de verre
+        dépoli au-dessus de l’image.
       </p>
 
-      {/* Blur slider — only visible when a backdrop image is set */}
       {settings.backdropImage && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-surface-500">Blur Amount</span>
+            <span className="text-xs text-surface-500">Intensité du flou</span>
             <span className="text-xs text-surface-400">{localBlur}px</span>
           </div>
+
           <input
             type="range"
             min="0"

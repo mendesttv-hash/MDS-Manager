@@ -1,0 +1,14 @@
+{
+  "search": "Rechercher des mods...",
+  "searchChampions": "Rechercher des champions...",
+  "champions": "Champions",
+  "gridView": "Vue grille",
+  "listView": "Vue liste",
+  "addMod": "Ajouter un mod",
+  "installing": "Installation...",
+  "startPatcher": "Lancer le patcher",
+  "stopPatcher": "Arrêter le patcher",
+  "starting": "Démarrage...",
+  "stopping": "Arrêt...",
+  "togglePatcher": "Basculer le patcher"
+}

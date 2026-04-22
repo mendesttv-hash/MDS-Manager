@@ -11,16 +11,16 @@ interface HotkeySectionProps {
 
 export function HotkeySection({ settings, onSave }: HotkeySectionProps) {
   return (
-    <SectionCard title="Hotkeys" icon={<Keyboard className="h-5 w-5" />}>
+    <SectionCard title="Raccourcis" icon={<Keyboard className="h-5 w-5" />}>
       <div className="space-y-4">
         <p className="text-sm text-surface-400">
-          System-wide keyboard shortcuts that work even when the app is not focused. Useful for
-          quickly reloading mods while testing in-game.
+          Raccourcis clavier globaux qui fonctionnent même lorsque l'application n'est pas au
+          premier plan. Pratique pour recharger rapidement les mods pendant vos tests en jeu.
         </p>
 
         <HotkeyInput
-          label="Hot Reload Mods"
-          description="Stop patcher, kill League, rebuild overlay, and restart the patcher with fresh mod files."
+          label="Recharger les mods"
+          description="Arrête le patcher, ferme League, reconstruit l’overlay, puis redémarre le patcher avec les fichiers de mods mis à jour."
           value={settings.reloadModsHotkey ?? null}
           onSet={async (accelerator) => {
             const result = await api.setHotkey("reloadMods", accelerator);
@@ -30,8 +30,8 @@ export function HotkeySection({ settings, onSave }: HotkeySectionProps) {
         />
 
         <HotkeyInput
-          label="Kill League"
-          description="Force-close the League of Legends process."
+          label="Fermer League"
+          description="Force la fermeture du processus League of Legends."
           value={settings.killLeagueHotkey ?? null}
           onSet={async (accelerator) => {
             const result = await api.setHotkey("killLeague", accelerator);
@@ -43,10 +43,10 @@ export function HotkeySection({ settings, onSave }: HotkeySectionProps) {
         <label className="flex items-center justify-between gap-4">
           <div>
             <span className="block text-sm font-medium text-surface-200">
-              Kill League stops patcher
+              Fermer League arrête le patcher
             </span>
             <span className="block text-sm text-surface-400">
-              When the Kill League hotkey is pressed, also stop the patcher.
+              Lorsque le raccourci Fermer League est utilisé, le patcher est également arrêté.
             </span>
           </div>
           <Switch
@@ -98,12 +98,13 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
     if (e.metaKey) keys.push("Super");
 
     const mainKey = e.key;
-    // Ignore standalone modifier keys
     if (["Control", "Alt", "Shift", "Meta"].includes(mainKey)) return;
 
-    // Require at least one modifier
     if (keys.length === 0) {
-      toast.warning("Hotkey must include a modifier", "Use Ctrl, Alt, Shift, or Super with a key.");
+      toast.warning(
+        "Le raccourci doit inclure une touche modificatrice",
+        "Utilisez Ctrl, Alt, Shift ou Super avec une autre touche."
+      );
       return;
     }
 
@@ -116,9 +117,12 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
 
     try {
       await onSet(accelerator);
-      toast.success("Hotkey set", `Hotkey set to ${accelerator}`);
+      toast.success("Raccourci défini", `Raccourci défini sur ${accelerator}`);
     } catch (err) {
-      toast.error("Failed to set hotkey", err instanceof Error ? err.message : String(err));
+      toast.error(
+        "Échec de la définition du raccourci",
+        err instanceof Error ? err.message : String(err)
+      );
     } finally {
       await api.resumeHotkeys();
       setIsPending(false);
@@ -129,9 +133,12 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
     setIsPending(true);
     try {
       await onSet(null);
-      toast.success("Hotkey cleared");
+      toast.success("Raccourci supprimé");
     } catch (err) {
-      toast.error("Failed to clear hotkey", err instanceof Error ? err.message : String(err));
+      toast.error(
+        "Échec de la suppression du raccourci",
+        err instanceof Error ? err.message : String(err)
+      );
     } finally {
       setIsPending(false);
     }
@@ -153,7 +160,7 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
             onKeyDown={handleKeyDown}
             onBlur={() => stopCapture()}
           >
-            Press a key combo...
+            Appuyez sur une combinaison...
           </div>
         ) : (
           <Button
@@ -163,7 +170,7 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
             onClick={() => startCapture()}
             loading={isPending}
           >
-            {value ?? "Not set"}
+            {value ?? "Non défini"}
           </Button>
         )}
 

@@ -9,19 +9,29 @@ interface ThemePickerProps {
 export function ThemePicker({ settings, onSave }: ThemePickerProps) {
   return (
     <div className="space-y-3">
-      <span className="block text-sm font-medium text-surface-400">Theme</span>
+      <span className="block text-sm font-medium text-surface-400">
+        Thème
+      </span>
+
       <div className="flex gap-2">
-        {(["system", "dark", "light"] as const).map((theme) => (
-          <Button
-            key={theme}
-            variant={settings.theme === theme ? "filled" : "default"}
-            size="sm"
-            onClick={() => onSave({ ...settings, theme })}
-            className="capitalize"
-          >
-            {theme}
-          </Button>
-        ))}
+        {(["system", "dark", "light"] as const).map((theme) => {
+          const labels = {
+            system: "Système",
+            dark: "Sombre",
+            light: "Clair",
+          };
+
+          return (
+            <Button
+              key={theme}
+              variant={settings.theme === theme ? "filled" : "default"}
+              size="sm"
+              onClick={() => onSave({ ...settings, theme })}
+            >
+              {labels[theme]}
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

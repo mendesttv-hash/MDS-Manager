@@ -1,8 +1,8 @@
 use super::{
-    find_config_file, is_valid_project_name, load_mod_project, load_workshop_project,
-    CreateProjectArgs, FantomeImportProgress, FantomeImportStage, FantomePeekResult,
-    GitImportProgress, GitImportStage, ImportFantomeArgs, ImportGitRepoArgs, SaveProjectConfigArgs,
-    Workshop, WorkshopProject,
+    find_config_file, is_valid_project_name, load_workshop_project, CreateProjectArgs,
+    FantomeImportProgress, FantomeImportStage, FantomePeekResult, GitImportProgress,
+    GitImportStage, ImportFantomeArgs, ImportGitRepoArgs, SaveProjectConfigArgs, Workshop,
+    WorkshopProject,
 };
 use crate::error::{AppError, AppResult};
 use crate::state::Settings;
@@ -52,7 +52,7 @@ impl Workshop {
         }
 
         // Sort by last modified (newest first)
-        projects.sort_by(|a, b| b.last_modified.cmp(&a.last_modified));
+        projects.sort_by_key(|p| std::cmp::Reverse(p.last_modified));
 
         Ok(projects)
     }
@@ -131,9 +131,7 @@ impl Workshop {
             return Err(AppError::ProjectNotFound(args.project_path));
         }
 
-        let config_path = find_config_file(&path)
-            .ok_or_else(|| AppError::ProjectNotFound(args.project_path.clone()))?;
-        let mut mod_project = load_mod_project(&config_path)?;
+        let mut mod_project = ModProject::load(&path)?;
 
         mod_project.display_name = args.display_name;
         mod_project.version = args.version;
@@ -194,10 +192,7 @@ impl Workshop {
         // Rename the directory
         fs::rename(&old_path, &new_path)?;
 
-        // Update mod_project.name in the config file
-        let config_path = find_config_file(&new_path)
-            .ok_or_else(|| AppError::ProjectNotFound(new_path.display().to_string()))?;
-        let mut mod_project = load_mod_project(&config_path)?;
+        let mut mod_project = ModProject::load(&new_path)?;
         mod_project.name = new_name;
 
         let json_config_path = new_path.join("mod.config.json");
@@ -314,6 +309,7 @@ impl Workshop {
                     .into_values()
                     .map(|layer_info| ModProjectLayer {
                         name: layer_info.name,
+                        display_name: layer_info.display_name,
                         priority: layer_info.priority,
                         description: None,
                         string_overrides: layer_info.string_overrides,
@@ -416,6 +412,7 @@ impl Workshop {
                 let meta_layer = metadata.layers.iter().find(|ml| ml.name == l.name);
                 ModProjectLayer {
                     name: l.name.clone(),
+                    display_name: meta_layer.and_then(|ml| ml.display_name.clone()),
                     priority: l.priority,
                     description: meta_layer.and_then(|ml| ml.description.clone()),
                     string_overrides: meta_layer
@@ -526,14 +523,12 @@ impl Workshop {
                 ));
             }
 
-            if find_config_file(&extracted_dir).is_none() {
-                return Err(AppError::ValidationFailed(
+            let mod_project = ModProject::load(&extracted_dir).map_err(|e| match e {
+                ltk_mod_project::ModProjectError::ConfigNotFound(_) => AppError::ValidationFailed(
                     "Repository does not contain a mod.config.json or mod.config.toml".to_string(),
-                ));
-            }
-
-            let config_path = find_config_file(&extracted_dir).unwrap();
-            let mod_project = load_mod_project(&config_path)?;
+                ),
+                other => AppError::from(other),
+            })?;
 
             let project_name = &mod_project.name;
             if !is_valid_project_name(project_name) {

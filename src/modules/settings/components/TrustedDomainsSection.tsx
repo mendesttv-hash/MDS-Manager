@@ -33,11 +33,11 @@ export function TrustedDomainsSection({ settings, onSave }: TrustedDomainsSectio
   }
 
   return (
-    <SectionCard title="Trusted Mod Providers" icon={<ShieldCheck className="h-5 w-5" />}>
+    <SectionCard title="Sources de mods autorisées" icon={<ShieldCheck className="h-5 w-5" />}>
       <div className="space-y-3">
         <p className="text-sm text-surface-400">
-          Only mods from these domains can be installed via one-click links. Remove all domains to
-          allow any source.
+          Seuls les mods provenant de ces domaines peuvent être installés via des liens en un clic.
+          Supprimez tous les domaines pour autoriser toutes les sources.
         </p>
 
         <div className="space-y-1.5">
@@ -64,12 +64,12 @@ export function TrustedDomainsSection({ settings, onSave }: TrustedDomainsSectio
             value={newDomain}
             onChange={(e) => setNewDomain(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="e.g. example.com"
+            placeholder="ex : exemple.com"
             className="flex-1"
           />
           <Button variant="ghost" size="sm" onClick={addDomain} disabled={!newDomain.trim()}>
             <Plus className="h-4 w-4" />
-            Add
+            Ajouter
           </Button>
         </div>
       </div>

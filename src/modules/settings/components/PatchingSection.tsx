@@ -38,13 +38,15 @@ export function PatchingSection({ settings, onSave }: PatchingSectionProps) {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Game Modes" icon={<ShieldAlert className="h-5 w-5" />}>
+      <SectionCard title="Modes de jeu" icon={<ShieldAlert className="h-5 w-5" />}>
         <label className="flex items-center justify-between gap-4">
           <div>
-            <span className="block text-sm font-medium text-surface-200">Patch TFT files</span>
+            <span className="block text-sm font-medium text-surface-200">
+              Patcher les fichiers TFT
+            </span>
             <span className="block text-sm text-surface-400">
-              Apply mods to Teamfight Tactics game files (Map22.wad.client). Disable this if you
-              only play Summoner&apos;s Rift.
+              Applique les mods aux fichiers de jeu de Teamfight Tactics (Map22.wad.client).
+              Désactivez cette option si vous jouez uniquement sur la Faille de l&apos;invocateur.
             </span>
           </div>
           <Switch
@@ -54,16 +56,16 @@ export function PatchingSection({ settings, onSave }: PatchingSectionProps) {
         </label>
       </SectionCard>
 
-      <SectionCard title="Script Modding" icon={<ShieldAlert className="h-5 w-5" />}>
+      <SectionCard title="Mods scripts" icon={<ShieldAlert className="h-5 w-5" />}>
         <div className="space-y-3">
           <label className="flex items-center justify-between gap-4">
             <div>
               <span className="block text-sm font-medium text-surface-200">
-                Block Scripts.wad.client
+                Bloquer Scripts.wad.client
               </span>
               <span className="block text-sm text-surface-400">
-                Prevents mods from modifying game scripts. Disabling this allows mods to execute
-                arbitrary game scripts.
+                Empêche les mods de modifier les scripts du jeu. Désactiver cette option autorise
+                les mods à exécuter des scripts de jeu arbitraires.
               </span>
             </div>
             <Switch
@@ -76,18 +78,19 @@ export function PatchingSection({ settings, onSave }: PatchingSectionProps) {
             <div className="flex items-start gap-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2.5">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
               <p className="text-sm text-amber-300">
-                Script modding is enabled. Only install mods from sources you trust.
+                Le modding par scripts est activé. Installez uniquement des mods provenant de
+                sources fiables.
               </p>
             </div>
           )}
         </div>
       </SectionCard>
 
-      <SectionCard title="WAD Blocklist" icon={<ShieldAlert className="h-5 w-5" />}>
+      <SectionCard title="WAD bloqués" icon={<ShieldAlert className="h-5 w-5" />}>
         <div className="space-y-3">
           <p className="text-sm text-surface-400">
-            Additional WAD files to exclude from overlay building. Mods will not be able to modify
-            these files.
+            Fichiers WAD supplémentaires à exclure de la création de l&apos;overlay. Les mods ne
+            pourront pas modifier ces fichiers.
           </p>
 
           <div className="space-y-1.5">
@@ -114,12 +117,12 @@ export function PatchingSection({ settings, onSave }: PatchingSectionProps) {
               value={newWad}
               onChange={(e) => setNewWad(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="e.g. Aatrox.wad.client"
+              placeholder="ex : Aatrox.wad.client"
               className="flex-1"
             />
             <Button variant="ghost" size="sm" onClick={addWad} disabled={!newWad.trim()}>
               <Plus className="h-4 w-4" />
-              Add
+              Ajouter
             </Button>
           </div>
         </div>

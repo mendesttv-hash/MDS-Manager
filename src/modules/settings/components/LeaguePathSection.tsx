@@ -41,7 +41,7 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
         onSave({ ...settings, leaguePath: path, firstRunComplete: true });
       }
     } catch (error) {
-      console.error("Failed to auto-detect:", error);
+      console.error("Échec de la détection automatique :", error);
     } finally {
       setIsDetecting(false);
     }
@@ -51,28 +51,31 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
     try {
       const selected = await open({
         directory: true,
-        title: "Select League of Legends Installation",
+        title: "Sélectionner l’installation de League of Legends",
       });
 
       if (selected) {
         onSave({ ...settings, leaguePath: selected as string, firstRunComplete: true });
       }
     } catch (error) {
-      console.error("Failed to browse:", error);
+      console.error("Échec de la sélection du dossier :", error);
     }
   }
 
   return (
     <SectionCard title="League of Legends" icon={<Gamepad2 className="h-5 w-5" />}>
       <div className="space-y-3">
-        <span className="block text-sm font-medium text-surface-400">Installation Path</span>
+        <span className="block text-sm font-medium text-surface-400">
+          Chemin d’installation
+        </span>
+
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Field.Control
               type="text"
               value={settings.leaguePath || ""}
               readOnly
-              placeholder="Not configured"
+              placeholder="Non configuré"
             />
             {settings.leaguePath && (
               <div className="absolute top-1/2 right-3 -translate-y-1/2">
@@ -81,7 +84,8 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
               </div>
             )}
           </div>
-          <Tooltip content="Browse">
+
+          <Tooltip content="Parcourir">
             <IconButton
               icon={<FolderOpen className="h-5 w-5" />}
               variant="outline"
@@ -90,6 +94,7 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
             />
           </Tooltip>
         </div>
+
         <Button
           variant="transparent"
           size="sm"
@@ -98,12 +103,14 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
           left={isDetecting ? undefined : <Loader2 className="h-4 w-4" />}
           className="text-accent-400 hover:text-accent-300"
         >
-          Auto-detect installation
+          Détection automatique de l’installation
         </Button>
+
         {leaguePathValid === false && settings.leaguePath && (
           <p className="text-sm text-red-400">
-            Could not find League of Legends at this path. Make sure it points to the folder
-            containing the <code className="rounded bg-surface-700 px-1">Game</code> directory.
+            Impossible de trouver League of Legends à cet emplacement. Vérifiez que ce chemin
+            pointe bien vers le dossier contenant le répertoire{" "}
+            <code className="rounded bg-surface-700 px-1">Game</code>.
           </p>
         )}
       </div>

@@ -74,7 +74,7 @@ interface StaticGridProps {
 
 function StaticGrid({ folders, rootMods, modsByFolder, viewMode, onViewDetails }: StaticGridProps) {
   return (
-    <div className={`${gridClass(viewMode)} stagger-enter`}>
+    <div className={`${gridClass(viewMode)} stagger-enter animate-fade-in`}>
       {folders.map((folder) => {
         const folderMods = modsByFolder.get(folder.id) ?? [];
         if (viewMode === "list") {
@@ -147,7 +147,7 @@ function DndGrid({
         items={sortableItems}
         strategy={viewMode === "list" ? verticalListSortingStrategy : rectSortingStrategy}
       >
-        <div className={gridClass(viewMode)}>
+        <div className={`${gridClass(viewMode)} animate-fade-in`}>
           {folderLocalOrder.map((sortableId) => {
             const folderId = parseSortableFolderId(sortableId);
             if (!folderId) return null;

@@ -6,13 +6,13 @@ import { ACCENT_PRESETS } from "../../api";
 import { useDebouncedSlider } from "./useDebouncedSlider";
 
 const ACCENT_PRESET_DISPLAY: { key: string; label: string; color: string }[] = [
-  { key: "blue", label: "Blue", color: "hsl(207, 100%, 50%)" },
-  { key: "purple", label: "Purple", color: "hsl(271, 100%, 50%)" },
-  { key: "green", label: "Green", color: "hsl(122, 100%, 35%)" },
+  { key: "blue", label: "Bleu", color: "hsl(207, 100%, 50%)" },
+  { key: "purple", label: "Violet", color: "hsl(271, 100%, 50%)" },
+  { key: "green", label: "Vert", color: "hsl(122, 100%, 35%)" },
   { key: "orange", label: "Orange", color: "hsl(36, 100%, 50%)" },
-  { key: "pink", label: "Pink", color: "hsl(340, 100%, 50%)" },
-  { key: "red", label: "Red", color: "hsl(4, 100%, 50%)" },
-  { key: "teal", label: "Teal", color: "hsl(174, 100%, 35%)" },
+  { key: "pink", label: "Rose", color: "hsl(340, 100%, 50%)" },
+  { key: "red", label: "Rouge", color: "hsl(4, 100%, 50%)" },
+  { key: "teal", label: "Turquoise", color: "hsl(174, 100%, 35%)" },
 ];
 
 interface AccentColorPickerProps {
@@ -44,9 +44,8 @@ export function AccentColorPicker({ settings, onSave }: AccentColorPickerProps) 
 
   return (
     <div className="space-y-3">
-      <span className="block text-sm font-medium text-surface-400">Accent Color</span>
+      <span className="block text-sm font-medium text-surface-400">Couleur d’accent</span>
 
-      {/* Preset Colors */}
       <div className="flex flex-wrap gap-2">
         {ACCENT_PRESET_DISPLAY.map(({ key, label, color }) => (
           <button
@@ -69,12 +68,11 @@ export function AccentColorPicker({ settings, onSave }: AccentColorPickerProps) 
         ))}
       </div>
 
-      {/* Custom Color Slider */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs text-surface-500">Custom Color</span>
+          <span className="text-xs text-surface-500">Couleur personnalisée</span>
           {isCustomHue && (
-            <span className="text-xs text-surface-400">Hue: {Math.round(localHue)}°</span>
+            <span className="text-xs text-surface-400">Teinte : {Math.round(localHue)}°</span>
           )}
         </div>
         <div className="relative">
@@ -97,7 +95,6 @@ export function AccentColorPicker({ settings, onSave }: AccentColorPickerProps) 
               )`,
             }}
           />
-          {/* Custom thumb indicator */}
           <div
             className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-white shadow-md"
             style={{
@@ -107,13 +104,12 @@ export function AccentColorPicker({ settings, onSave }: AccentColorPickerProps) 
           />
         </div>
 
-        {/* Preview */}
         <div className="flex items-center gap-3">
           <div
             className="h-6 w-6 rounded"
             style={{ backgroundColor: `hsl(${localHue}, 100%, 50%)` }}
           />
-          <span className="text-sm text-surface-400">Preview</span>
+          <span className="text-sm text-surface-400">Aperçu</span>
         </div>
       </div>
     </div>

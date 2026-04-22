@@ -6,14 +6,11 @@ import {
   Palette,
   Settings as SettingsIcon,
   ShieldAlert,
-  Users,
 } from "lucide-react";
 
 import { Tabs } from "@/components";
 import {
-  AboutSection,
   AppearanceSection,
-  AuthorProfilesSection,
   GeneralSection,
   HotkeySection,
   PatchingSection,
@@ -42,10 +39,12 @@ export function Settings() {
     saveSettingsMutation.mutate(newSettings!);
   }
 
+  void appInfo;
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex h-16 shrink-0 items-center border-b border-surface-600 bg-surface-800/50 px-6">
-        <h2 className="text-xl font-semibold text-surface-100">Settings</h2>
+        <h2 className="text-xl font-semibold text-surface-100">Paramètres</h2>
       </header>
 
       <Tabs.Root defaultValue="general" className="flex min-h-0 flex-1 flex-row">
@@ -59,47 +58,34 @@ export function Settings() {
             className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
           >
             <SettingsIcon className="h-4 w-4 shrink-0" />
-            General
+            Général
           </Tabs.Tab>
+
           <Tabs.Tab
             variant="pills"
             value="patching"
             className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
           >
             <ShieldAlert className="h-4 w-4 shrink-0" />
-            Patching
+            Patcher
           </Tabs.Tab>
+
           <Tabs.Tab
             variant="pills"
             value="hotkeys"
             className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
           >
             <Keyboard className="h-4 w-4 shrink-0" />
-            Hotkeys
+            Raccourcis
           </Tabs.Tab>
-          <Tabs.Tab
-            variant="pills"
-            value="profiles"
-            className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
-          >
-            <Users className="h-4 w-4 shrink-0" />
-            Author Profiles
-          </Tabs.Tab>
+
           <Tabs.Tab
             variant="pills"
             value="appearance"
             className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
           >
             <Palette className="h-4 w-4 shrink-0" />
-            Appearance
-          </Tabs.Tab>
-          <Tabs.Tab
-            variant="pills"
-            value="about"
-            className="flex items-center gap-2.5 text-left data-active:bg-accent-500/15 data-active:text-accent-300"
-          >
-            <Info className="h-4 w-4 shrink-0" />
-            About
+            Apparence
           </Tabs.Tab>
         </Tabs.List>
 
@@ -109,10 +95,11 @@ export function Settings() {
               <div className="flex items-start gap-3 rounded-xl border border-accent-500/30 bg-accent-500/10 p-5">
                 <Info className="mt-0.5 h-5 w-5 shrink-0 text-accent-400" />
                 <div>
-                  <h3 className="font-medium text-accent-300">Welcome to LTK Manager!</h3>
+                  <h3 className="font-medium text-accent-300">Bienvenue sur MDS Manager !</h3>
                   <p className="mt-1 text-sm text-surface-400">
-                    To get started, please configure your League of Legends installation path below.
-                    You can use auto-detection or browse to the folder manually.
+                    Pour commencer, configurez le chemin d’installation de League of Legends
+                    ci-dessous. Vous pouvez utiliser la détection automatique ou sélectionner le
+                    dossier manuellement.
                   </p>
                 </div>
               </div>
@@ -128,16 +115,8 @@ export function Settings() {
             <HotkeySection settings={settings} onSave={saveSettings} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="profiles" className="mx-auto max-w-2xl p-6">
-            <AuthorProfilesSection settings={settings} onSave={saveSettings} />
-          </Tabs.Panel>
-
           <Tabs.Panel value="appearance" className="mx-auto max-w-2xl p-6">
             <AppearanceSection settings={settings} onSave={saveSettings} />
-          </Tabs.Panel>
-
-          <Tabs.Panel value="about" className="mx-auto max-w-2xl p-6">
-            <AboutSection appInfo={appInfo} />
           </Tabs.Panel>
         </div>
       </Tabs.Root>

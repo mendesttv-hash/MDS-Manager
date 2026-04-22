@@ -10,16 +10,17 @@ interface MinimizeToTraySectionProps {
 
 export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectionProps) {
   return (
-    <SectionCard title="System Tray & Autostart" icon={<MonitorDown className="h-5 w-5" />}>
+    <SectionCard title="Zone de notification & Démarrage" icon={<MonitorDown className="h-5 w-5" />}>
       <div className="space-y-3">
         <label className="flex items-center justify-between gap-4">
           <div>
             <span className="block text-sm font-medium text-surface-200">
-              Minimize to system tray
+              Réduire dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              When enabled, clicking the minimize button will hide the application to the system
-              tray instead of the taskbar. Click the tray icon to restore.
+              Lorsque cette option est activée, cliquer sur le bouton réduire masque l'application
+              dans la zone de notification au lieu de la barre des tâches. Cliquez sur l’icône pour
+              la restaurer.
             </span>
           </div>
           <Switch
@@ -27,14 +28,15 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
             onCheckedChange={(checked) => onSave({ ...settings, minimizeToTray: checked })}
           />
         </label>
+
         <label className="flex items-center justify-between gap-4">
           <div>
             <span className="block text-sm font-medium text-surface-200">
-              Start minimized to tray
+              Démarrer réduit dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              When enabled, the application will start hidden in the system tray. Click the tray
-              icon to open.
+              Lorsque cette option est activée, l'application démarre directement en arrière-plan
+              dans la zone de notification. Cliquez sur l’icône pour l’ouvrir.
             </span>
           </div>
           <Switch
@@ -42,11 +44,14 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
             onCheckedChange={(checked) => onSave({ ...settings, startInTray: checked })}
           />
         </label>
+
         <label className="flex items-center justify-between gap-4">
           <div>
-            <span className="block text-sm font-medium text-surface-200">Auto Run</span>
+            <span className="block text-sm font-medium text-surface-200">
+              Lancement automatique
+            </span>
             <span className="block text-sm text-surface-400">
-              Automatically launch LTK Manager when you start your computer.
+              Lance automatiquement LTK Manager au démarrage de votre ordinateur.
             </span>
           </div>
           <Switch
@@ -54,15 +59,16 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
             onCheckedChange={(checked) => onSave({ ...settings, autoRun: checked })}
           />
         </label>
+
         {settings.autoRun && (
           <label className="flex items-center justify-between gap-4 border-l-2 border-surface-700 pl-4">
             <div>
               <span className="block text-sm font-medium text-surface-200">
-                Start in tray unless update available
+                Démarrer en arrière-plan sauf si une mise à jour est disponible
               </span>
               <span className="block text-sm text-surface-400">
-                Stay hidden in the tray on autostart — but show the window automatically if a new
-                update is ready.
+                Reste masquée dans la zone de notification au démarrage — sauf si une mise à jour est
+                disponible, auquel cas la fenêtre s’ouvre automatiquement.
               </span>
             </div>
             <Switch
@@ -73,14 +79,15 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
             />
           </label>
         )}
+
         <label className="flex items-center justify-between gap-4">
           <div>
             <span className="block text-sm font-medium text-surface-200">
-              Always start patcher at launch
+              Lancer automatiquement le patcher
             </span>
             <span className="block text-sm text-surface-400">
-              Automatically start patching mods every time the app launches, this starts last active
-              profile.
+              Lance automatiquement le patch des mods à chaque démarrage de l'application, en
+              utilisant le dernier profil actif.
             </span>
           </div>
           <Switch

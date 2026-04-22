@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { InstalledMod, LibraryFolder } from "@/lib/tauri";
+import {
+  CUSTOM_MOD_META_EVENT,
+  getCustomModMeta,
+  isFavorite,
+} from "@/modules/library/utils/customModMeta";
 import { sortFolders, sortModsByFolder } from "@/modules/library/utils";
 import { usePatcherStatus } from "@/modules/patcher";
 import { useHasActiveFilters, useLibraryFilterStore } from "@/stores";
@@ -33,6 +38,26 @@ interface UseLibraryContentArgs {
   folderId?: string;
 }
 
+function getDisplaySortName(mod: InstalledMod) {
+  const meta = getCustomModMeta(mod.id);
+  return (meta.customTitle?.trim() || mod.displayName || mod.name || "").toLowerCase();
+}
+
+function sortFavoritesThenAlpha(mods: InstalledMod[]) {
+  return [...mods].sort((a, b) => {
+    const aFav = isFavorite(a.id);
+    const bFav = isFavorite(b.id);
+
+    if (aFav && !bFav) return -1;
+    if (!aFav && bFav) return 1;
+
+    if (a.enabled && !b.enabled) return -1;
+    if (!a.enabled && b.enabled) return 1;
+
+    return getDisplaySortName(a).localeCompare(getDisplaySortName(b), "fr");
+  });
+}
+
 export function useLibraryContent({
   mods,
   searchQuery,
@@ -44,12 +69,23 @@ export function useLibraryContent({
   const { data: patcherStatus } = usePatcherStatus();
   const isPatcherActive = patcherStatus?.running ?? false;
   const [detailsMod, setDetailsMod] = useState<InstalledMod | null>(null);
+  const [metaVersion, setMetaVersion] = useState(0);
+
   const filteredMods = useFilteredMods(mods, searchQuery);
   const hasActiveFilters = useHasActiveFilters();
   const { sort } = useLibraryFilterStore();
   const { data: folders } = useFolders();
   const { data: folderOrder } = useFolderOrder();
   const cleanupStaleFolders = useLibraryViewStore((s) => s.cleanupStaleFolders);
+
+  useEffect(() => {
+    const handleMetaChange = () => setMetaVersion((v) => v + 1);
+    window.addEventListener(CUSTOM_MOD_META_EVENT, handleMetaChange);
+
+    return () => {
+      window.removeEventListener(CUSTOM_MOD_META_EVENT, handleMetaChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (!folders) return;
@@ -88,26 +124,37 @@ export function useLibraryContent({
     return map;
   }, [mods]);
 
-  const sortedModsByFolder = useMemo(
-    () => sortModsByFolder(modsByFolder, sort),
-    [modsByFolder, sort],
-  );
+  const sortedModsByFolder = useMemo(() => {
+    const base = sortModsByFolder(modsByFolder, sort);
+    const result = new Map<string, InstalledMod[]>();
+
+    for (const [folderKey, folderMods] of base.entries()) {
+      result.set(folderKey, sortFavoritesThenAlpha(folderMods));
+    }
+
+    return result;
+  }, [modsByFolder, sort, metaVersion]);
+
+  const sortedFilteredMods = useMemo(() => {
+    return sortFavoritesThenAlpha(filteredMods);
+  }, [filteredMods, metaVersion]);
 
   const contentView = useMemo((): ContentView => {
     if (isLoading) return { type: "loading" };
     if (hasError) return { type: "error" };
 
-    if (filteredMods.length === 0 && orderedUserFolders.length === 0) {
+    if (sortedFilteredMods.length === 0 && orderedUserFolders.length === 0) {
       return { type: "empty", hasSearch: isSearching, hasFilters: hasActiveFilters };
     }
 
     if (isFlatMode) {
-      return { type: "flat", mods: filteredMods };
+      return { type: "flat", mods: sortedFilteredMods };
     }
 
     if (folderId && folderId !== ROOT_FOLDER_ID) {
       const folder = folderMap.get(folderId);
       if (!folder) return { type: "empty", hasSearch: false, hasFilters: false };
+
       return {
         type: "folder-drilldown",
         folder,
@@ -124,7 +171,7 @@ export function useLibraryContent({
   }, [
     isLoading,
     hasError,
-    filteredMods,
+    sortedFilteredMods,
     orderedUserFolders,
     isFlatMode,
     isSearching,

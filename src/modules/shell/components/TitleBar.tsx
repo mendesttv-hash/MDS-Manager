@@ -1,33 +1,20 @@
 import { Link } from "@tanstack/react-router";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { open } from "@tauri-apps/plugin-shell";
+import { Window } from "@tauri-apps/api/window";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import type { LucideIcon } from "lucide-react";
-import {
-  Accessibility,
-  FolderOpen,
-  Hammer,
-  Library,
-  Minus,
-  Settings,
-  Square,
-  X,
-} from "lucide-react";
+import { FolderOpen, Library, Minus, Settings, Square, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { IconButton, Tooltip, useToast } from "@/components";
 import { api, type AppInfo, unwrap } from "@/lib/tauri";
 
-import { NotificationCenter } from "./NotificationCenter";
-
-const navItems = [
-  { to: "/", label: "Library", icon: Library, exact: true },
-  { to: "/workshop", label: "Workshop", icon: Hammer, exact: false },
-] as const;
+const navItems = [{ to: "/", label: "Bibliothèque", icon: Library, exact: true }] as const;
 
 const linkBaseClass =
   "relative flex h-full items-center gap-1.5 px-3 text-sm font-medium transition-colors";
-const settingsLinkBase = "relative flex h-full items-center px-3 transition-colors";
+const settingsLinkBase =
+  "relative flex h-8 w-8 items-center justify-center rounded-lg transition-colors";
 const activeLinkClass = "text-accent-400";
 const inactiveLinkClass = "text-surface-400 hover:text-surface-200";
 
@@ -64,16 +51,19 @@ function NavLink({
   );
 }
 
-function buildBugReportUrl(appInfo: AppInfo | undefined): string {
-  const base = "https://github.com/LeagueToolkit/ltk-manager/issues/new?template=bug_report.yml";
-  if (!appInfo) return base;
-
-  const params = new URLSearchParams();
-  params.set("template", "bug_report.yml");
-  params.set("version", appInfo.version);
-  params.set("os", `${appInfo.os} ${appInfo.arch}`);
-
-  return `https://github.com/LeagueToolkit/ltk-manager/issues/new?${params.toString()}`;
+async function handleOpenExternalUrl(
+  href: string,
+  toast: ReturnType<typeof useToast>,
+  label: string,
+) {
+  try {
+    await openUrl(href);
+  } catch (error: unknown) {
+    toast.error(
+      `Impossible d’ouvrir ${label}`,
+      error instanceof Error ? error.message : String(error),
+    );
+  }
 }
 
 interface TitleBarProps {
@@ -81,11 +71,13 @@ interface TitleBarProps {
   appInfo?: AppInfo;
 }
 
-export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
-  const version = appInfo?.version;
-  const bugReportUrl = buildBugReportUrl(appInfo);
+export function TitleBar({ title = "MDS Manager", appInfo }: TitleBarProps) {
+  const version = "MDS v1.0";
   const [isMaximized, setIsMaximized] = useState(false);
-  const appWindow = getCurrentWindow();
+
+  const appWindow =
+    typeof window !== "undefined" && "__TAURI_INTERNALS__" in window ? Window.getCurrent() : null;
+
   const toast = useToast();
 
   async function handleOpenStorageDirectory() {
@@ -95,17 +87,17 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
       await api.revealInExplorer(path);
     } catch (error: unknown) {
       toast.error(
-        "Failed to open directory",
+        "Impossible d’ouvrir le dossier",
         error instanceof Error ? error.message : String(error),
       );
     }
   }
 
   useEffect(() => {
-    // Check initial maximized state
+    if (!appWindow) return;
+
     appWindow.isMaximized().then(setIsMaximized);
 
-    // Listen for resize events to update maximized state
     const unlisten = appWindow.onResized(() => {
       appWindow.isMaximized().then(setIsMaximized);
     });
@@ -118,29 +110,43 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
   const handleMinimize = () => {
     api.minimizeToTray();
   };
-  const handleMaximize = () => appWindow.toggleMaximize();
-  const handleClose = () => appWindow.close();
+
+  const handleMaximize = () => {
+    if (!appWindow) return;
+    appWindow.toggleMaximize();
+  };
+
+  const handleClose = () => {
+    if (!appWindow) return;
+    appWindow.close();
+  };
+
+  void appInfo;
 
   return (
     <header
-      className="title-bar flex h-10 shrink-0 items-center justify-between border-b border-surface-600 bg-surface-950 select-none"
+      className="title-bar flex h-10 shrink-0 items-center justify-between border-b border-purple-900 bg-gradient-to-r from-[#0b0f1a] via-[#0d1222] to-[#0a0d18] select-none"
       data-tauri-drag-region
     >
-      {/* Left: App icon, title, version, and navigation */}
       <div className="flex h-full items-center" data-tauri-drag-region>
         <div className="flex items-center gap-2 pr-4 pl-3" data-tauri-drag-region>
-          <img src="/icon.svg" alt="LTK" className="h-5 w-5" data-tauri-drag-region />
-          <span className="text-sm font-medium text-surface-100" data-tauri-drag-region>
+          <img
+            src="/logo.png"
+            alt="MDS"
+            className="h-8 w-8 rounded-md border border-purple-500/30 shadow-lg"
+            data-tauri-drag-region
+          />
+          <span
+            className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-sm font-bold tracking-wide text-transparent"
+            data-tauri-drag-region
+          >
             {title}
           </span>
-          {version && (
-            <span className="text-xs text-surface-500" data-tauri-drag-region>
-              v{version}
-            </span>
-          )}
+          <span className="ml-1 text-xs text-purple-400" data-tauri-drag-region>
+            {version}
+          </span>
         </div>
 
-        {/* Navigation tabs */}
         <nav className="flex h-full items-center gap-1">
           {navItems.map((item) => (
             <NavLink key={item.to} {...item} />
@@ -148,44 +154,57 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
         </nav>
       </div>
 
-      {/* Right: Notifications, Settings, and window controls */}
-      <div className="flex h-full items-center">
-        <Tooltip content="Open storage directory">
-          <IconButton
-            icon={<FolderOpen className="h-4 w-4" />}
-            variant="ghost"
-            size="sm"
-            onClick={handleOpenStorageDirectory}
-            aria-label="Open storage directory"
-            className="text-surface-400 hover:text-surface-200"
-          />
-        </Tooltip>
+      <div className="flex h-full items-center gap-2 pr-2">
+        <div className="flex items-center gap-2">
+          <Tooltip content="Télécharger des skins (DivineSkins)">
+            <button
+              type="button"
+              onClick={() =>
+                void handleOpenExternalUrl("https://divineskins.gg/", toast, "DivineSkins")
+              }
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-300 transition-all duration-150 hover:bg-white/10 hover:text-white"
+              aria-label="Ouvrir DivineSkins"
+              title="Ouvrir DivineSkins"
+            >
+              <img
+                src="/divineskins-logo.png"
+                alt="DivineSkins"
+                className="h-5 w-5 object-contain"
+              />
+            </button>
+          </Tooltip>
 
-        <NotificationCenter />
+          <Tooltip content="Télécharger des mods (RuneForge)">
+            <button
+              type="button"
+              onClick={() =>
+                void handleOpenExternalUrl("https://runeforge.dev/", toast, "RuneForge")
+              }
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-300 transition-all duration-150 hover:bg-white/10 hover:text-white"
+              aria-label="Ouvrir RuneForge"
+              title="Ouvrir RuneForge"
+            >
+              <img
+                src="/runeforge-logo.png"
+                alt="RuneForge"
+                className="h-5 w-5 object-contain"
+              />
+            </button>
+          </Tooltip>
 
-        <Tooltip content="Report a Bug">
-          <IconButton
-            icon={<Accessibility className="h-5 w-5" />}
-            variant="ghost"
-            size="sm"
-            onClick={() => open(bugReportUrl)}
-            aria-label="Report a Bug"
-            className="text-surface-400 hover:text-surface-200"
-          />
-        </Tooltip>
+          <Tooltip content="Ouvrir le dossier de stockage">
+            <button
+              type="button"
+              onClick={handleOpenStorageDirectory}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-surface-300 transition-all duration-150 hover:bg-white/10 hover:text-white"
+              aria-label="Ouvrir le dossier de stockage"
+              title="Ouvrir le dossier de stockage"
+            >
+              <FolderOpen className="h-4 w-4" />
+            </button>
+          </Tooltip>
+        </div>
 
-        <Tooltip content="Join our Discord">
-          <IconButton
-            icon={<DiscordIcon className="h-4 w-4" />}
-            variant="ghost"
-            size="sm"
-            onClick={() => open("https://discord.gg/yhzDVRyQex")}
-            aria-label="Join our Discord"
-            className="text-surface-400 hover:text-surface-200"
-          />
-        </Tooltip>
-
-        {/* Settings button */}
         <Link
           to="/settings"
           activeProps={{
@@ -194,7 +213,7 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
           inactiveProps={{
             className: twMerge(settingsLinkBase, inactiveLinkClass),
           }}
-          aria-label="Settings"
+          aria-label="Paramètres"
         >
           {({ isActive }) => (
             <>
@@ -204,16 +223,14 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
           )}
         </Link>
 
-        {/* Separator */}
-        <div className="mx-2 h-5 w-px bg-surface-600" />
+        <div className="mx-1 h-5 w-px bg-surface-600" />
 
-        {/* Window controls */}
         <IconButton
           icon={<Minus className="h-3.5 w-3.5" />}
           variant="ghost"
           size="sm"
           onClick={handleMinimize}
-          aria-label="Minimize"
+          aria-label="Réduire"
           className="mx-0.5 h-7 w-7 rounded-md text-surface-400 transition-[transform,background-color,color] duration-100 hover:bg-amber-500 hover:text-white active:scale-90 active:opacity-80"
         />
         <IconButton
@@ -227,7 +244,7 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
           variant="ghost"
           size="sm"
           onClick={handleMaximize}
-          aria-label={isMaximized ? "Restore" : "Maximize"}
+          aria-label={isMaximized ? "Restaurer" : "Agrandir"}
           className="mx-0.5 h-7 w-7 rounded-md text-surface-400 transition-[transform,background-color,color] duration-100 hover:bg-green-500 hover:text-white active:scale-90 active:opacity-80"
         />
         <IconButton
@@ -235,23 +252,14 @@ export function TitleBar({ title = "LTK Manager", appInfo }: TitleBarProps) {
           variant="ghost"
           size="sm"
           onClick={handleClose}
-          aria-label="Close"
-          className="mx-0.5 mr-2 h-7 w-7 rounded-md text-surface-400 transition-[transform,background-color,color] duration-100 hover:bg-red-500 hover:text-white active:scale-90 active:opacity-80"
+          aria-label="Fermer"
+          className="mx-0.5 h-7 w-7 rounded-md text-surface-400 transition-[transform,background-color,color] duration-100 hover:bg-red-500 hover:text-white active:scale-90 active:opacity-80"
         />
       </div>
     </header>
   );
 }
 
-function DiscordIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.947 2.418-2.157 2.418z" />
-    </svg>
-  );
-}
-
-// Custom icon for restored/unmaximized state (overlapping squares)
 function OverlappingSquares({ className }: { className?: string }) {
   return (
     <svg
@@ -261,9 +269,7 @@ function OverlappingSquares({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
     >
-      {/* Back square */}
       <rect x="4" y="1" width="9" height="9" rx="1" />
-      {/* Front square */}
       <rect x="1" y="4" width="9" height="9" rx="1" fill="currentColor" fillOpacity="0.1" />
       <rect x="1" y="4" width="9" height="9" rx="1" />
     </svg>

@@ -6,7 +6,6 @@ import { api } from "@/lib/tauri";
 import {
   checkModForSkinhack,
   DragDropOverlay,
-  FilterBar,
   ImportProgressDialog,
   LibraryContent,
   LibraryToolbar,
@@ -112,21 +111,21 @@ export function Library({ folderId }: LibraryProps = {}) {
         />
       )}
       <LibraryToolbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        actions={actions}
-        patcher={{
-          status: patcherStatus,
-          isStarting: isStarting,
-          isStopping: stopPatcher.isPending,
-          onStart: handleStartPatcher,
-          onStop: handleStopPatcher,
-        }}
-        hasEnabledMods={hasEnabledMods}
-        isLoading={isLoading}
-        isPatcherActive={isPatcherActive}
+  searchQuery={searchQuery}
+  onSearchChange={setSearchQuery}
+  actions={actions}
+  patcher={{
+    status: patcherStatus,
+    isStarting: isStarting,
+    isStopping: stopPatcher.isPending,
+    onStart: handleStartPatcher,
+    onStop: handleStopPatcher,
+  }}
+  hasEnabledMods={hasEnabledMods}
+  isLoading={isLoading}
+  isPatcherActive={isPatcherActive}
+  filterOptions={filterOptions}
       />
-      <FilterBar filterOptions={filterOptions} />
       <LibraryContent
         mods={mods}
         searchQuery={searchQuery}

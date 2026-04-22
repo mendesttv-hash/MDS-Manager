@@ -4,11 +4,19 @@ import { useDisplayStore } from "@/stores";
 const MOTION_OPTIONS = [
   {
     value: "system" as const,
-    label: "System Default",
-    description: "Follows your OS preference",
+    label: "Par défaut (système)",
+    description: "Suit les préférences de votre système",
   },
-  { value: "on" as const, label: "On", description: "Disable all animations" },
-  { value: "off" as const, label: "Off", description: "Always animate" },
+  {
+    value: "on" as const,
+    label: "Réduit",
+    description: "Désactive toutes les animations",
+  },
+  {
+    value: "off" as const,
+    label: "Activé",
+    description: "Active toujours les animations",
+  },
 ];
 
 export function ReduceMotionPicker() {
@@ -18,7 +26,7 @@ export function ReduceMotionPicker() {
   return (
     <div className="flex flex-col gap-2">
       <RadioGroup.Root value={reduceMotion} onValueChange={setReduceMotion}>
-        <RadioGroup.Label>Reduce Motion</RadioGroup.Label>
+        <RadioGroup.Label>Réduire les animations</RadioGroup.Label>
         <RadioGroup.Options>
           {MOTION_OPTIONS.map((opt) => (
             <RadioGroup.Item

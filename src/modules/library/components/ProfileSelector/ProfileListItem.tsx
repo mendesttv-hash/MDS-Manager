@@ -110,7 +110,7 @@ export function ProfileListItem({
         className="flex-1 justify-between"
         right={isActive ? <Check className="h-4 w-4 text-accent-500" /> : undefined}
       >
-        {profile.name}
+        {profile.name === "Default" ? "Profil par défaut" : profile.name}
       </Button>
 
       {!isDefaultProfile && (

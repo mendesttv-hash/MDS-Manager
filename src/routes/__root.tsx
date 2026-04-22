@@ -1,5 +1,5 @@
 import { createRootRoute, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Window } from "@tauri-apps/api/window";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -10,12 +10,13 @@ import { useLibraryWatcher } from "@/modules/library";
 import { StatusBar } from "@/modules/patcher";
 import { useAppInfo, useCheckSetupRequired, useSettings } from "@/modules/settings";
 import { DevConsole, TitleBar, useDevLogStream } from "@/modules/shell";
-import { UpdateNotification, useUpdateCheck } from "@/modules/updater";
+import { useUpdateCheck } from "@/modules/updater";
 import { useDisplayStore, useUpdaterUpdate } from "@/stores";
 
 function RootLayout() {
   const { data: appInfo } = useAppInfo();
   useUpdateCheck({ checkOnMount: true, delayMs: 3000 });
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,8 +35,13 @@ function RootLayout() {
   const { data: settings } = useSettings();
 
   useEffect(() => {
-    if (update && settings?.startInTrayUnlessUpdate) {
-      void getCurrentWindow().show();
+    const currentWindow =
+      typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
+        ? Window.getCurrent()
+        : null;
+
+    if (update && settings?.startInTrayUnlessUpdate && currentWindow) {
+      void currentWindow.show();
     }
   }, [update, settings?.startInTrayUnlessUpdate]);
 
@@ -56,17 +62,15 @@ function RootLayout() {
       const input = document.querySelector<HTMLInputElement>('input[placeholder*="Search"]');
       input?.focus();
     },
-    { preventDefault: true, enableOnFormTags: true },
+    { preventDefault: true, enableOnFormTags: true }
   );
 
-  // Redirect to settings if setup is required
   useEffect(() => {
     if (setupRequired && location.pathname !== "/settings") {
       navigate({ to: "/settings", search: { firstRun: true } });
     }
   }, [setupRequired, navigate, location.pathname]);
 
-  // Show loading state while checking setup
   if (isCheckingSetup) {
     return (
       <div className="flex h-screen items-center justify-center bg-linear-to-br from-surface-900 via-surface-800 to-surface-900">
@@ -76,10 +80,9 @@ function RootLayout() {
   }
 
   return (
-    <div className="root flex h-screen flex-col bg-surface-900">
+    <div className="root flex h-screen flex-col bg-gradient-to-br from-[#0b0f1a] via-[#0d1222] to-[#070910]">
       <TitleBar appInfo={appInfo} />
       <main className="relative flex-1 overflow-hidden">
-        <UpdateNotification />
         <div
           className={`h-full ${pageTransition.className ?? ""}`}
           onAnimationEnd={pageTransition.onAnimationEnd}

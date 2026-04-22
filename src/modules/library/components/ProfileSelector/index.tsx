@@ -24,11 +24,17 @@ export function ProfileSelector() {
       setIsOpen(false);
     } catch (error: unknown) {
       toast.error(
-        "Failed to switch profile",
+        "Impossible de changer de profil",
         error instanceof Error ? error.message : String(error),
       );
     }
   };
+
+  // ✅ FIX CLEAN DU NOM
+  const displayName =
+    !activeProfile?.name || activeProfile.name === "Default"
+      ? "Profil par défaut"
+      : activeProfile.name;
 
   return (
     <>
@@ -45,7 +51,7 @@ export function ProfileSelector() {
             />
           }
         >
-          {activeProfile?.name || "Default"}
+          {displayName}
         </Popover.Trigger>
 
         <Popover.Portal>

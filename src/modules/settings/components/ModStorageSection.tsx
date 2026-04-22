@@ -14,30 +14,34 @@ export function ModStorageSection({ settings, onSave }: ModStorageSectionProps) 
     try {
       const selected = await open({
         directory: true,
-        title: "Select Mod Storage Location",
+        title: "Sélectionner l’emplacement de stockage des mods",
       });
 
       if (selected) {
         onSave({ ...settings, modStoragePath: selected as string });
       }
     } catch (error) {
-      console.error("Failed to browse:", error);
+      console.error("Erreur lors de la sélection du dossier :", error);
     }
   }
 
   return (
-    <SectionCard title="Mod Storage" icon={<HardDrive className="h-5 w-5" />}>
+    <SectionCard title="Stockage des mods" icon={<HardDrive className="h-5 w-5" />}>
       <div className="space-y-3">
-        <span className="block text-sm font-medium text-surface-400">Storage Location</span>
+        <span className="block text-sm font-medium text-surface-400">
+          Emplacement de stockage
+        </span>
+
         <div className="flex gap-2">
           <Field.Control
             type="text"
             value={settings.modStoragePath || ""}
             readOnly
-            placeholder="Default (app data directory)"
+            placeholder="Par défaut (dossier de données de l’application)"
             className="flex-1"
           />
-          <Tooltip content="Browse">
+
+          <Tooltip content="Parcourir">
             <IconButton
               icon={<FolderOpen className="h-5 w-5" />}
               variant="outline"
@@ -46,8 +50,10 @@ export function ModStorageSection({ settings, onSave }: ModStorageSectionProps) 
             />
           </Tooltip>
         </div>
+
         <p className="text-sm text-surface-400">
-          Choose where your installed mods will be stored. Leave empty to use the default location.
+          Choisissez où les mods installés seront stockés. Laissez vide pour utiliser l’emplacement
+          par défaut.
         </p>
       </div>
     </SectionCard>

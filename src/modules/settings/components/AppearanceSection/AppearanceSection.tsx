@@ -16,7 +16,7 @@ interface AppearanceSectionProps {
 
 export function AppearanceSection({ settings, onSave }: AppearanceSectionProps) {
   return (
-    <SectionCard title="Appearance" icon={<Palette className="h-5 w-5" />}>
+    <SectionCard title="Apparence" icon={<Palette className="h-5 w-5" />}>
       <div className="space-y-6">
         <ThemePicker settings={settings} onSave={onSave} />
         <AccentColorPicker settings={settings} onSave={onSave} />

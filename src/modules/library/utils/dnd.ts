@@ -40,5 +40,6 @@ export function resolveFolderId(id: string): string | null {
 
 export function gridClass(viewMode: "grid" | "list") {
   if (viewMode === "list") return "space-y-2";
-  return "grid grid-cols-[repeat(auto-fill,minmax(var(--card-min-w,240px),var(--card-max-w,320px)))] justify-center gap-4";
+
+  return "grid gap-4 grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5";
 }

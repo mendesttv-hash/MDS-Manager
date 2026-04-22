@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "LTK Manager",
-  "version": "0.4.0",
-  "identifier": "dev.leaguetoolkit.manager",
+  "productName": "MDS Manager",
+  "version": "1.0.0",
+  "identifier": "com.mds.manager",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "LTK Manager",
+        "title": "MDS Manager",
         "width": 1200,
         "height": 800,
         "minWidth": 900,
@@ -24,7 +24,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: data: http://asset.localhost",
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: data: http://asset.localhost https:; connect-src 'self' ipc: http://ipc.localhost https:",
       "assetProtocol": {
         "enable": true,
         "scope": ["**"]
@@ -41,30 +41,23 @@
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
+      "icons/icon.ico",
+      "icons/icon.icns"
     ],
     "windows": {
-      "signCommand": "trusted-signing-cli -e https://eus.codesigning.azure.net/ -a runeforge -c Natoken -d LTK-Manager %1",
+      "wix": {
+        "language": "fr-FR"
+      },
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
       }
     },
-    "createUpdaterArtifacts": true
+    "createUpdaterArtifacts": false
   },
   "plugins": {
     "deep-link": {
       "desktop": {
         "schemes": ["ltk"]
-      }
-    },
-    "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEEwQjBFRkU5MDdENUVENTIKUldSUzdkVUg2ZSt3b0pldjRGZUQ3WkgwcjU0M2d5N1pnRGlhR0NPODkyMWpyaTEvUFQvWWlpcVkK",
-      "endpoints": [
-        "https://github.com/LeagueToolkit/ltk-manager/releases/download/updater/latest.json"
-      ],
-      "windows": {
-        "installMode": "passive"
       }
     }
   }
