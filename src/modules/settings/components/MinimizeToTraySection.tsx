@@ -18,7 +18,7 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
               Réduire dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              Lorsque cette option est activée, cliquer sur le bouton réduire masque l'application
+              Lorsque cette option est activée, cliquer sur le bouton réduire masque l&apos;application
               dans la zone de notification au lieu de la barre des tâches. Cliquez sur l’icône pour
               la restaurer.
             </span>
@@ -35,7 +35,7 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
               Démarrer réduit dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              Lorsque cette option est activée, l'application démarre directement en arrière-plan
+              Lorsque cette option est activée, l&apos;application démarre directement en arrière-plan
               dans la zone de notification. Cliquez sur l’icône pour l’ouvrir.
             </span>
           </div>
@@ -86,7 +86,7 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
               Lancer automatiquement le patcher
             </span>
             <span className="block text-sm text-surface-400">
-              Lance automatiquement le patch des mods à chaque démarrage de l'application, en
+              Lance automatiquement le patch des mods à chaque démarrage de l&apos;application, en
               utilisant le dernier profil actif.
             </span>
           </div>
