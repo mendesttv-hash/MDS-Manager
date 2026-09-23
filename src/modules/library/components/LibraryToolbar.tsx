@@ -6,12 +6,12 @@ import {
   IconButton,
   Kbd,
   MultiSelect,
-  Tooltip,
   type MultiSelectOption,
+  Tooltip,
 } from "@/components";
 import type { PatcherStatus } from "@/lib/tauri";
-import type { FilterOptions, useLibraryActions } from "@/modules/library/api";
 import { useLibraryViewMode } from "@/modules/library/api";
+import type { FilterOptions, useLibraryActions } from "@/modules/library/api";
 import { useLibraryFilterStore } from "@/stores";
 
 import { ProfileSelector } from "./ProfileSelector";
