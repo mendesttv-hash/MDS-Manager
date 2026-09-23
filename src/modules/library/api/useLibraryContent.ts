@@ -1,4 +1,3 @@
-```tsx
 import type { InstalledMod, LibraryFolder } from "@/lib/tauri";
 import { sortFolders, sortModsByFolder } from "@/modules/library/utils";
 import {
