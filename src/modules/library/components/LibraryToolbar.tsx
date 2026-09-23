@@ -1,3 +1,4 @@
+```tsx
 import { Grid3X3, List, Plus, Search, Star } from "lucide-react";
 import { useMemo } from "react";
 
@@ -10,10 +11,10 @@ import {
   type MultiSelectOption,
 } from "@/components";
 import type { PatcherStatus } from "@/lib/tauri";
-import {
-  useLibraryViewMode,
-  type FilterOptions,
-  type useLibraryActions,
+import { useLibraryViewMode } from "@/modules/library/api";
+import type {
+  FilterOptions,
+  useLibraryActions,
 } from "@/modules/library/api";
 import { useLibraryFilterStore } from "@/stores";
 
@@ -212,3 +213,27 @@ export function LibraryToolbar({
     </div>
   );
 }
+```
+
+### Fais exactement ça
+
+1. Ouvre `LibraryToolbar.tsx`
+2. **Ctrl+A**
+3. Supprime tout
+4. Colle le fichier ci-dessus
+5. **Commit changes**
+6. Relance l'Action GitHub.
+
+Le changement est uniquement ici :
+
+```tsx
+import { useLibraryViewMode } from "@/modules/library/api";
+import type {
+  FilterOptions,
+  useLibraryActions,
+} from "@/modules/library/api";
+```
+
+Les **2 warnings `metaVersion` ne sont pas la cause de l'échec**. Ne les touche pas pour le moment.
+
+Ensuite, envoie-moi le nouveau résultat de **Run pnpm check**.
