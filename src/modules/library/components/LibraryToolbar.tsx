@@ -10,8 +10,11 @@ import {
   type MultiSelectOption,
 } from "@/components";
 import type { PatcherStatus } from "@/lib/tauri";
-import { useLibraryViewMode } from "@/modules/library/api";
-import type { FilterOptions, useLibraryActions } from "@/modules/library/api";
+import {
+  type FilterOptions,
+  useLibraryViewMode,
+  type useLibraryActions,
+} from "@/modules/library/api";
 import { useLibraryFilterStore } from "@/stores";
 
 import { ProfileSelector } from "./ProfileSelector";
