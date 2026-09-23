@@ -1,14 +1,4 @@
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
-import {
-  EllipsisVertical,
-  FolderOpen,
-  FolderX,
-  Info,
-  Layers,
-  ShieldAlert,
-  Star,
-  Trash2,
-} from "lucide-react";
+import { EllipsisVertical, FolderOpen, FolderX, Info, Layers, ShieldAlert, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Dialog, IconButton, Menu, Switch, Tooltip } from "@/components";
@@ -21,12 +11,12 @@ import {
   useUninstallMod,
 } from "@/modules/library/api";
 import { useModThumbnail } from "@/modules/library/api/useModThumbnail";
+import { detectChampionIconUrl } from "@/modules/library/utils/championIcon";
 import {
   CUSTOM_MOD_META_EVENT,
   getCustomModMeta,
   setFavoriteStatus,
 } from "@/modules/library/utils/customModMeta";
-import { detectChampionIconUrl } from "@/modules/library/utils/championIcon";
 import { getTagLabel } from "@/modules/library/utils/labels";
 import { usePatcherStatus } from "@/modules/patcher";
 
@@ -42,14 +32,16 @@ interface ModCardProps {
 
 export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
   const { data: thumbnailUrl } = useModThumbnail(mod.id);
-  const [customMeta, setCustomMetaState] = useState(() => getCustomModMeta(mod.id));
+  const [customMeta, setCustomMetaState] = useState(() =>
+    getCustomModMeta(mod.id),
+  );
   const [championIconUrl, setChampionIconUrl] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     const refreshMeta = () => {
-  setCustomMetaState(getCustomModMeta(mod.id));
-};
+      setCustomMetaState(getCustomModMeta(mod.id));
+    };
 
     refreshMeta();
     window.addEventListener(CUSTOM_MOD_META_EVENT, refreshMeta);
@@ -60,13 +52,15 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
   }, [mod.id]);
 
   const displayTitle = customMeta.customTitle?.trim() || mod.displayName;
-  const displayImage = customMeta.customImage ? convertFileSrc(customMeta.customImage) : thumbnailUrl;
+  const displayImage = customMeta.customImage
+    ? convertFileSrc(customMeta.customImage)
+    : thumbnailUrl;
   const favorite = !!customMeta.favorite;
 
   function handleToggleFavorite(e: React.MouseEvent<HTMLButtonElement>) {
-  e.stopPropagation();
-  setFavoriteStatus(mod.id, !favorite);
-}
+    e.stopPropagation();
+    setFavoriteStatus(mod.id, !favorite);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -112,7 +106,8 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
 
   const patcherRunning = patcherStatus?.running ?? false;
   const disabled = isFlagged || patcherRunning;
-  const isInUserFolder = mod.folderId != null && mod.folderId !== ROOT_FOLDER_ID;
+  const isInUserFolder =
+    mod.folderId != null && mod.folderId !== ROOT_FOLDER_ID;
   const isMultiLayer = mod.layers.length > 1;
 
   function handleToggle(modId: string, enabled: boolean) {
@@ -123,14 +118,23 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
 
     toggleMod.mutate(
       { modId, enabled },
-      { onError: (error) => console.error("Failed to toggle mod:", error.message) },
+      {
+        onError: (error) =>
+          console.error("Failed to toggle mod:", error.message),
+      },
     );
   }
 
   function handlePickerConfirm(layerStates: Record<string, boolean>) {
     enableWithLayers.mutate(
       { modId: mod.id, layerStates },
-      { onError: (error) => console.error("Failed to enable mod with layers:", error.message) },
+      {
+        onError: (error) =>
+          console.error(
+            "Failed to enable mod with layers:",
+            error.message,
+          ),
+      },
     );
   }
 
@@ -140,7 +144,8 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
 
   function handleUninstall() {
     uninstallMod.mutate(mod.id, {
-      onError: (error) => console.error("Failed to uninstall mod:", error.message),
+      onError: (error) =>
+        console.error("Failed to uninstall mod:", error.message),
     });
   }
 
@@ -165,7 +170,11 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
       <div
         onClick={handleCardClick}
         className={`flex items-center gap-4 rounded-lg border p-4 transition-[transform,box-shadow,background-color,border-color] duration-150 ease-out ${
-          isFlagged ? "cursor-default opacity-50" : disabled ? "cursor-default" : "cursor-pointer"
+          isFlagged
+            ? "cursor-default opacity-50"
+            : disabled
+              ? "cursor-default"
+              : "cursor-pointer"
         } ${
           mod.enabled && !isFlagged
             ? "border-fuchsia-500/40 bg-gradient-to-b from-[#171424] via-[#12131d] to-[#0b0d15] shadow-[0_0_26px_-8px_rgba(168,85,247,0.42)] hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(168,85,247,0.24)] hover:shadow-[0_0_30px_rgba(168,85,247,0.25)]"
@@ -190,8 +199,12 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <h3 className="truncate font-medium text-surface-100">{displayTitle}</h3>
-            {favorite && <Star className="h-4 w-4 fill-current text-yellow-400" />}
+            <h3 className="truncate font-medium text-surface-100">
+              {displayTitle}
+            </h3>
+            {favorite && (
+              <Star className="h-4 w-4 fill-current text-yellow-400" />
+            )}
             {isFlagged && (
               <Tooltip content={skinhackReason}>
                 <ShieldAlert className="h-4 w-4 shrink-0 text-red-500" />
@@ -208,20 +221,26 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
         </div>
 
         <div data-no-toggle onClick={(e) => e.stopPropagation()}>
-  <button
-    type="button"
-    onClick={handleToggleFavorite}
-    className={`flex h-8 w-8 items-center justify-center rounded-md border transition ${
-      favorite
-        ? "border-yellow-400/30 bg-yellow-500/15 text-yellow-400"
-        : "border-white/10 bg-white/5 text-white/40 hover:text-white"
-    }`}
-    aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
-    title={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
-  >
-    <Star className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
-  </button>
-</div>
+          <button
+            type="button"
+            onClick={handleToggleFavorite}
+            className={`flex h-8 w-8 items-center justify-center rounded-md border transition ${
+              favorite
+                ? "border-yellow-400/30 bg-yellow-500/15 text-yellow-400"
+                : "border-white/10 bg-white/5 text-white/40 hover:text-white"
+            }`}
+            aria-label={
+              favorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
+            title={
+              favorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
+          >
+            <Star
+              className={`h-4 w-4 ${favorite ? "fill-current" : ""}`}
+            />
+          </button>
+        </div>
 
         <div data-no-toggle onClick={(e) => e.stopPropagation()}>
           {isMultiLayer && !mod.enabled ? (
@@ -276,14 +295,20 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
                       Voir les détails
                     </Menu.Item>
                   )}
-                  <Menu.Item icon={<FolderOpen className="h-4 w-4" />} onClick={handleOpenLocation}>
+                  <Menu.Item
+                    icon={<FolderOpen className="h-4 w-4" />}
+                    onClick={handleOpenLocation}
+                  >
                     Ouvrir l’emplacement
                   </Menu.Item>
                   {isInUserFolder && (
                     <Menu.Item
                       icon={<FolderX className="h-4 w-4" />}
                       onClick={() =>
-                        moveModToFolder.mutate({ modId: mod.id, folderId: ROOT_FOLDER_ID })
+                        moveModToFolder.mutate({
+                          modId: mod.id,
+                          folderId: ROOT_FOLDER_ID,
+                        })
                       }
                     >
                       Retirer du dossier
@@ -304,7 +329,10 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
           </Menu.Root>
         </div>
 
-        <SkinhackInfoDialog open={skinhackInfoOpen} onOpenChange={setSkinhackInfoOpen} />
+        <SkinhackInfoDialog
+          open={skinhackInfoOpen}
+          onOpenChange={setSkinhackInfoOpen}
+        />
       </div>
     );
   }
@@ -313,7 +341,11 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
     <div
       onClick={handleCardClick}
       className={`group relative flex h-full min-h-[185px] flex-col overflow-hidden rounded-2xl border transition-all duration-200 ease-out ${
-        isFlagged ? "cursor-default opacity-50" : disabled ? "cursor-default" : "cursor-pointer"
+        isFlagged
+          ? "cursor-default opacity-50"
+          : disabled
+            ? "cursor-default"
+            : "cursor-pointer"
       } ${
         mod.enabled && !isFlagged
           ? "border-fuchsia-500/40 bg-gradient-to-b from-[#171424] via-[#12131d] to-[#0b0d15] shadow-[0_0_26px_-8px_rgba(168,85,247,0.42)] hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(168,85,247,0.24)]"
@@ -395,28 +427,40 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
       </div>
 
       <div className="relative z-10 flex min-h-[46px] items-center justify-between border-t border-white/5 px-1.5 py-0.5">
-  <div className="flex min-w-0 items-center gap-2 pr-2">
-    <button
-  type="button"
-  data-no-toggle
-  onClick={handleToggleFavorite}
-  className={`flex h-8 w-8 items-center justify-center rounded-md border transition ${
-    favorite
-      ? "border-yellow-400/30 bg-yellow-500/15 text-yellow-400"
-      : "border-white/10 bg-white/5 text-white/40 hover:text-white"
-  }`}
-  aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
-  title={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
->
-  <Star className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
-</button>
+        <div className="flex min-w-0 items-center gap-2 pr-2">
+          <button
+            type="button"
+            data-no-toggle
+            onClick={handleToggleFavorite}
+            className={`flex h-8 w-8 items-center justify-center rounded-md border transition ${
+              favorite
+                ? "border-yellow-400/30 bg-yellow-500/15 text-yellow-400"
+                : "border-white/10 bg-white/5 text-white/40 hover:text-white"
+            }`}
+            aria-label={
+              favorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
+            title={
+              favorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
+          >
+            <Star
+              className={`h-4 w-4 ${favorite ? "fill-current" : ""}`}
+            />
+          </button>
 
-    <div className="min-w-0">
-      <h3 className="line-clamp-1 text-[14px] font-semibold text-white">{displayTitle}</h3>
-    </div>
-  </div>
+          <div className="min-w-0">
+            <h3 className="line-clamp-1 text-[14px] font-semibold text-white">
+              {displayTitle}
+            </h3>
+          </div>
+        </div>
 
-  <div className="shrink-0" data-no-toggle onClick={(e) => e.stopPropagation()}>
+        <div
+          className="shrink-0"
+          data-no-toggle
+          onClick={(e) => e.stopPropagation()}
+        >
           <Menu.Root>
             <Menu.Trigger
               disabled={patcherRunning}
@@ -449,14 +493,20 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
                       Voir les détails
                     </Menu.Item>
                   )}
-                  <Menu.Item icon={<FolderOpen className="h-4 w-4" />} onClick={handleOpenLocation}>
+                  <Menu.Item
+                    icon={<FolderOpen className="h-4 w-4" />}
+                    onClick={handleOpenLocation}
+                  >
                     Ouvrir l’emplacement
                   </Menu.Item>
                   {isInUserFolder && (
                     <Menu.Item
                       icon={<FolderX className="h-4 w-4" />}
                       onClick={() =>
-                        moveModToFolder.mutate({ modId: mod.id, folderId: ROOT_FOLDER_ID })
+                        moveModToFolder.mutate({
+                          modId: mod.id,
+                          folderId: ROOT_FOLDER_ID,
+                        })
                       }
                     >
                       Retirer du dossier
@@ -478,7 +528,10 @@ export function ModCard({ mod, viewMode, onViewDetails }: ModCardProps) {
         </div>
       </div>
 
-      <SkinhackInfoDialog open={skinhackInfoOpen} onOpenChange={setSkinhackInfoOpen} />
+      <SkinhackInfoDialog
+        open={skinhackInfoOpen}
+        onOpenChange={setSkinhackInfoOpen}
+      />
     </div>
   );
 }
@@ -501,16 +554,19 @@ function SkinhackInfoDialog({
           </Dialog.Header>
           <Dialog.Body>
             <p className="text-sm leading-relaxed text-surface-300">
-              Un skinhack est un mod qui donne accès à des skins payants de League of Legends.
+              Un skinhack est un mod qui donne accès à des skins payants de
+              League of Legends.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-surface-300">
-              L’utilisation de skinhacks ne respecte pas la politique de distribution et peut mettre
-              votre compte en danger. LTK Manager bloque ces mods pour protéger les utilisateurs
-              ainsi que la communauté du modding.
+              L’utilisation de skinhacks ne respecte pas la politique de
+              distribution et peut mettre votre compte en danger. LTK Manager
+              bloque ces mods pour protéger les utilisateurs ainsi que la
+              communauté du modding.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-surface-400">
-              Si vous pensez que ce mod a été signalé par erreur, ouvrez une issue sur la page du
-              dépôt GitHub avec les informations nécessaires afin que nous puissions vérifier.
+              Si vous pensez que ce mod a été signalé par erreur, ouvrez une
+              issue sur la page du dépôt GitHub avec les informations
+              nécessaires afin que nous puissions vérifier.
             </p>
           </Dialog.Body>
         </Dialog.Overlay>
@@ -521,15 +577,23 @@ function SkinhackInfoDialog({
 
 function ModPills({ mod, max }: { mod: InstalledMod; max: number }) {
   const pills = [
-    ...mod.tags.map((t) => ({ label: getTagLabel(t), color: "brand" as const })),
-    ...mod.champions.map((c) => ({ label: c, color: "emerald" as const })),
+    ...mod.tags.map((t) => ({
+      label: getTagLabel(t),
+      color: "brand" as const,
+    })),
+    ...mod.champions.map((c) => ({
+      label: c,
+      color: "emerald" as const,
+    })),
   ];
+
   if (pills.length === 0) return null;
 
   const visible = pills.slice(0, max);
 
   const colorClasses = {
-    brand: "border border-fuchsia-400/20 bg-fuchsia-500/10 text-fuchsia-200",
+    brand:
+      "border border-fuchsia-400/20 bg-fuchsia-500/10 text-fuchsia-200",
     emerald: "border border-sky-400/20 bg-sky-500/10 text-sky-200",
   } as const;
 
