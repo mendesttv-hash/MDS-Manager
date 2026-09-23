@@ -2,7 +2,7 @@
 
 Custom version of LTK Manager with personal modifications.
 
-Based on:
+Based on **LTK Manager v0.6.1**:
 https://github.com/LeagueToolkit/ltk-manager
 
 ---
@@ -24,7 +24,7 @@ https://github.com/LeagueToolkit/ltk-manager
 * 🖥️ Configured the Tauri application
 * 📦 Configured the Windows build
 * 🔧 Changed the product name to `MDS Manager`
-* 🔑 Configured the application identifier as `com.mds.manager`
+* 🔑 Configured the application identifier to `com.mds.manager`
 * 📦 Created a Windows `.msi` installer
 
 ---
@@ -42,9 +42,23 @@ https://github.com/LeagueToolkit/ltk-manager
 
 ---
 
+## 📌 Project
+
+MDS Manager is a customized version of the open-source LTK Manager project.
+
+This project was created as a personal project to learn and experiment with:
+
+* Web application development
+* Desktop application development
+* UI customization
+* Application configuration
+* Build and packaging workflows
+
+---
+
 ## ⚠️ Disclaimer
 
-This project is NOT the official LTK Manager.
+This project is **NOT the official LTK Manager**.
 
 It is a custom build with personal modifications.
 
@@ -55,7 +69,10 @@ https://github.com/LeagueToolkit
 
 ## ⚖️ License
 
-Based on LTK Manager (MIT / Apache-2.0)
+Based on LTK Manager and its original licenses:
+
+* MIT
+* Apache-2.0
 
 ---
 
