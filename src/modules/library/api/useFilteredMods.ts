@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { getCustomModMeta } from "@/modules/library/utils/customModMeta";
-
+```tsx
 import type { InstalledMod } from "@/lib/tauri";
+import { getCustomModMeta } from "@/modules/library/utils/customModMeta";
 import { sortMods } from "@/modules/library/utils";
 import { useLibraryFilterStore } from "@/stores";
+import { useMemo } from "react";
 
 const ALL_CHAMPIONS = [
   "Aatrox","Ahri","Akali","Akshan","Alistar","Ambessa","Amumu","Anivia","Annie",
@@ -24,8 +24,8 @@ const ALL_CHAMPIONS = [
   "Skarner","Smolder","Sona","Soraka","Swain","Sylas","Syndra","Tahm Kench",
   "Taliyah","Talon","Taric","Teemo","Thresh","Tristana","Trundle","Tryndamere",
   "Twisted Fate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Vel'Koz","Vex","Vi","Viego","Viktor",
- "Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath","Xin Zhao","Yasuo","Yone","Yorick","Yuumi","Yunara",
-"Zac","Zed","Zeri","Ziggs","Zilean","Zoe","Zyra","Zaahen",
+  "Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath","Xin Zhao","Yasuo","Yone","Yorick","Yuumi","Yunara",
+  "Zac","Zed","Zeri","Ziggs","Zilean","Zoe","Zyra","Zaahen",
 ];
 
 // 🔥 normalisation
@@ -123,8 +123,8 @@ export function useFilteredMods(mods: InstalledMod[], searchQuery: string): Inst
       });
     }
     if (favoritesOnly) {
-  result = result.filter((mod) => getCustomModMeta(mod.id).favorite === true);
-}
+      result = result.filter((mod) => getCustomModMeta(mod.id).favorite === true);
+    }
 
     // 🗺️ maps
     if (selectedMaps.size > 0) {
@@ -134,5 +134,5 @@ export function useFilteredMods(mods: InstalledMod[], searchQuery: string): Inst
     }
 
     return sortMods(result, sort);
- }, [mods, searchQuery, selectedTags, selectedChampions, selectedMaps, favoritesOnly, sort]);
+  }, [mods, searchQuery, selectedTags, selectedChampions, selectedMaps, favoritesOnly, sort]);
 }
