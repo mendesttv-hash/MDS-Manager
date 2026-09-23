@@ -51,4 +51,4 @@ export function useFilterOptions(mods: InstalledMod[]): FilterOptions {
       maps: [...maps].sort(),
     };
   }, [mods]);
-};
+}
