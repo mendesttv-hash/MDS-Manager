@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "react";
+
 import type { InstalledMod, LibraryFolder } from "@/lib/tauri";
 import { sortFolders, sortModsByFolder } from "@/modules/library/utils";
 import {
@@ -8,7 +10,6 @@ import {
 import { usePatcherStatus } from "@/modules/patcher";
 import { useHasActiveFilters, useLibraryFilterStore } from "@/stores";
 import { useLibraryViewStore } from "@/stores/libraryView";
-import { useEffect, useMemo, useState } from "react";
 
 import { useFolderOrder, useFolders } from "./queries";
 import { useFilteredMods } from "./useFilteredMods";
