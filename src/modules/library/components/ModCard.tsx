@@ -21,12 +21,12 @@ import {
   useUninstallMod,
 } from "@/modules/library/api";
 import { useModThumbnail } from "@/modules/library/api/useModThumbnail";
+import { detectChampionIconUrl } from "@/modules/library/utils/championIcon";
 import {
   CUSTOM_MOD_META_EVENT,
   getCustomModMeta,
   setFavoriteStatus,
 } from "@/modules/library/utils/customModMeta";
-import { detectChampionIconUrl } from "@/modules/library/utils/championIcon";
 import { getTagLabel } from "@/modules/library/utils/labels";
 import { usePatcherStatus } from "@/modules/patcher";
 
