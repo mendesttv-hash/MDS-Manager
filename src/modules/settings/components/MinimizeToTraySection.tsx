@@ -10,7 +10,10 @@ interface MinimizeToTraySectionProps {
 
 export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectionProps) {
   return (
-    <SectionCard title="Zone de notification & Démarrage" icon={<MonitorDown className="h-5 w-5" />}>
+    <SectionCard
+      title="Zone de notification & Démarrage"
+      icon={<MonitorDown className="h-5 w-5" />}
+    >
       <div className="space-y-3">
         <label className="flex items-center justify-between gap-4">
           <div>
@@ -18,9 +21,9 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
               Réduire dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              Lorsque cette option est activée, cliquer sur le bouton réduire masque l&apos;application
-              dans la zone de notification au lieu de la barre des tâches. Cliquez sur l’icône pour
-              la restaurer.
+              Lorsque cette option est activée, cliquer sur le bouton réduire masque
+              l&apos;application dans la zone de notification au lieu de la barre des tâches.
+              Cliquez sur l’icône pour la restaurer.
             </span>
           </div>
           <Switch
@@ -35,8 +38,8 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
               Démarrer réduit dans la zone de notification
             </span>
             <span className="block text-sm text-surface-400">
-              Lorsque cette option est activée, l&apos;application démarre directement en arrière-plan
-              dans la zone de notification. Cliquez sur l’icône pour l’ouvrir.
+              Lorsque cette option est activée, l&apos;application démarre directement en
+              arrière-plan dans la zone de notification. Cliquez sur l’icône pour l’ouvrir.
             </span>
           </div>
           <Switch
@@ -67,8 +70,8 @@ export function MinimizeToTraySection({ settings, onSave }: MinimizeToTraySectio
                 Démarrer en arrière-plan sauf si une mise à jour est disponible
               </span>
               <span className="block text-sm text-surface-400">
-                Reste masquée dans la zone de notification au démarrage — sauf si une mise à jour est
-                disponible, auquel cas la fenêtre s’ouvre automatiquement.
+                Reste masquée dans la zone de notification au démarrage — sauf si une mise à jour
+                est disponible, auquel cas la fenêtre s’ouvre automatiquement.
               </span>
             </div>
             <Switch

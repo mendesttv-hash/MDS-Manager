@@ -231,7 +231,7 @@ export function ProjectCard({ project, viewMode, onEdit }: ProjectCardProps) {
         ) : (
           <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(244,114,182,0.22),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.2),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.16),transparent_35%)]" />
-            <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:22px_22px]" />
+            <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:22px_22px] opacity-20" />
             <span className="relative text-5xl font-black tracking-wide text-white/80 drop-shadow-[0_0_18px_rgba(168,85,247,0.35)]">
               {project.displayName.charAt(0).toUpperCase()}
             </span>

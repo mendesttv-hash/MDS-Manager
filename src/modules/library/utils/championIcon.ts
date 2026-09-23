@@ -130,9 +130,7 @@ function findChampionInText(text: string, champions: ChampionEntry[]): ChampionE
 
   // 🔥 Match inclus (après tri)
   const included = sortedChampions.find(
-    (c) =>
-      normalized.includes(c.normalizedName) ||
-      normalized.includes(c.normalizedId),
+    (c) => normalized.includes(c.normalizedName) || normalized.includes(c.normalizedId),
   );
 
   if (included) return included;

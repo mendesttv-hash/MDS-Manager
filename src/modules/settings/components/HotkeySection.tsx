@@ -14,8 +14,8 @@ export function HotkeySection({ settings, onSave }: HotkeySectionProps) {
     <SectionCard title="Raccourcis" icon={<Keyboard className="h-5 w-5" />}>
       <div className="space-y-4">
         <p className="text-sm text-surface-400">
-          Raccourcis clavier globaux qui fonctionnent même lorsque l&apos;application n&apos;est pas au
-          premier plan. Pratique pour recharger rapidement les mods pendant vos tests en jeu.
+          Raccourcis clavier globaux qui fonctionnent même lorsque l&apos;application n&apos;est pas
+          au premier plan. Pratique pour recharger rapidement les mods pendant vos tests en jeu.
         </p>
 
         <HotkeyInput
@@ -103,7 +103,7 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
     if (keys.length === 0) {
       toast.warning(
         "Le raccourci doit inclure une touche modificatrice",
-        "Utilisez Ctrl, Alt, Shift ou Super avec une autre touche."
+        "Utilisez Ctrl, Alt, Shift ou Super avec une autre touche.",
       );
       return;
     }
@@ -121,7 +121,7 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
     } catch (err) {
       toast.error(
         "Échec de la définition du raccourci",
-        err instanceof Error ? err.message : String(err)
+        err instanceof Error ? err.message : String(err),
       );
     } finally {
       await api.resumeHotkeys();
@@ -137,7 +137,7 @@ function HotkeyInput({ label, description, value, onSet }: HotkeyInputProps) {
     } catch (err) {
       toast.error(
         "Échec de la suppression du raccourci",
-        err instanceof Error ? err.message : String(err)
+        err instanceof Error ? err.message : String(err),
       );
     } finally {
       setIsPending(false);

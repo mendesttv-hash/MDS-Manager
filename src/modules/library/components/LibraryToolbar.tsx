@@ -46,12 +46,8 @@ export function LibraryToolbar({
   filterOptions,
 }: LibraryToolbarProps) {
   const { viewMode, setViewMode } = useLibraryViewMode();
-  const {
-    selectedChampions,
-    setChampions,
-    favoritesOnly,
-    toggleFavoritesOnly,
-  } = useLibraryFilterStore();
+  const { selectedChampions, setChampions, favoritesOnly, toggleFavoritesOnly } =
+    useLibraryFilterStore();
 
   const championOptions = useMemo<MultiSelectOption[]>(
     () => filterOptions.champions.map((c) => ({ value: c, label: c })),
@@ -72,7 +68,7 @@ export function LibraryToolbar({
             placeholder="Rechercher des mods..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="h-11 w-full rounded-xl border border-white/10 bg-[#060b1d] pr-4 pl-11 text-sm text-white outline-none transition-all duration-200 placeholder:text-surface-400 focus:border-accent-400 focus:shadow-[0_0_0_2px_rgba(168,85,247,0.3)]"
+            className="h-11 w-full rounded-xl border border-white/10 bg-[#060b1d] pr-4 pl-11 text-sm text-white transition-all duration-200 outline-none placeholder:text-surface-400 focus:border-accent-400 focus:shadow-[0_0_0_2px_rgba(168,85,247,0.3)]"
           />
         </div>
 
@@ -97,19 +93,11 @@ export function LibraryToolbar({
                 : "border-white/10 bg-[#060b1d] text-white/40 hover:text-white"
             }`}
             aria-label={
-              favoritesOnly
-                ? "Afficher tous les mods"
-                : "Afficher uniquement les favoris"
+              favoritesOnly ? "Afficher tous les mods" : "Afficher uniquement les favoris"
             }
-            title={
-              favoritesOnly
-                ? "Afficher tous les mods"
-                : "Afficher uniquement les favoris"
-            }
+            title={favoritesOnly ? "Afficher tous les mods" : "Afficher uniquement les favoris"}
           >
-            <Star
-              className={`h-4 w-4 ${favoritesOnly ? "fill-current" : ""}`}
-            />
+            <Star className={`h-4 w-4 ${favoritesOnly ? "fill-current" : ""}`} />
           </button>
         </div>
 
@@ -154,16 +142,12 @@ export function LibraryToolbar({
             variant="filled"
             size="sm"
             onClick={actions.handleInstallMod}
-            loading={
-              actions.installMod.isPending ||
-              actions.bulkInstallMods.isPending
-            }
+            loading={actions.installMod.isPending || actions.bulkInstallMods.isPending}
             disabled={isPatcherActive}
             left={<Plus className="h-4 w-4" />}
             className="h-11 shrink-0 rounded-xl border border-fuchsia-400/15 bg-gradient-to-r from-fuchsia-600 to-violet-600 px-5 text-white shadow-[0_8px_22px_rgba(168,85,247,0.28)] hover:shadow-[0_12px_28px_rgba(168,85,247,0.34)]"
           >
-            {actions.installMod.isPending ||
-            actions.bulkInstallMods.isPending
+            {actions.installMod.isPending || actions.bulkInstallMods.isPending
               ? "Installation..."
               : "Ajouter un mod"}
           </Button>
@@ -199,9 +183,7 @@ export function LibraryToolbar({
                   : "h-11 shrink-0 rounded-xl border border-white/10 bg-[#060b1d] px-5 text-surface-400"
               }
             >
-              {patcher.isStarting
-                ? "Démarrage..."
-                : "Lancer le patcher"}
+              {patcher.isStarting ? "Démarrage..." : "Lancer le patcher"}
             </Button>
           )}
         </Tooltip>

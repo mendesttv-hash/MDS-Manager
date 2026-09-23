@@ -40,12 +40,7 @@ interface UseLibraryContentArgs {
 
 function getDisplaySortName(mod: InstalledMod) {
   const meta = getCustomModMeta(mod.id);
-  return (
-    meta.customTitle?.trim() ||
-    mod.displayName ||
-    mod.name ||
-    ""
-  ).toLowerCase();
+  return (meta.customTitle?.trim() || mod.displayName || mod.name || "").toLowerCase();
 }
 
 function sortFavoritesThenAlpha(mods: InstalledMod[]) {
@@ -81,9 +76,7 @@ export function useLibraryContent({
   const { sort } = useLibraryFilterStore();
   const { data: folders } = useFolders();
   const { data: folderOrder } = useFolderOrder();
-  const cleanupStaleFolders = useLibraryViewStore(
-    (s) => s.cleanupStaleFolders,
-  );
+  const cleanupStaleFolders = useLibraryViewStore((s) => s.cleanupStaleFolders);
 
   useEffect(() => {
     const handleMetaChange = () => setMetaVersion((v) => v + 1);
@@ -102,11 +95,7 @@ export function useLibraryContent({
 
   const isSearching = searchQuery.length > 0;
   const isPrioritySort = sort.field === "priority";
-  const dndDisabled =
-    isSearching ||
-    isPatcherActive ||
-    !isPrioritySort ||
-    hasActiveFilters;
+  const dndDisabled = isSearching || isPatcherActive || !isPrioritySort || hasActiveFilters;
   const isFlatMode = isSearching || hasActiveFilters;
 
   const folderMap = useMemo(() => {

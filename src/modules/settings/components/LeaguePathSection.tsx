@@ -65,9 +65,7 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
   return (
     <SectionCard title="League of Legends" icon={<Gamepad2 className="h-5 w-5" />}>
       <div className="space-y-3">
-        <span className="block text-sm font-medium text-surface-400">
-          Chemin d’installation
-        </span>
+        <span className="block text-sm font-medium text-surface-400">Chemin d’installation</span>
 
         <div className="flex gap-2">
           <div className="relative flex-1">
@@ -108,8 +106,8 @@ export function LeaguePathSection({ settings, onSave }: SettingsSectionProps) {
 
         {leaguePathValid === false && settings.leaguePath && (
           <p className="text-sm text-red-400">
-            Impossible de trouver League of Legends à cet emplacement. Vérifiez que ce chemin
-            pointe bien vers le dossier contenant le répertoire{" "}
+            Impossible de trouver League of Legends à cet emplacement. Vérifiez que ce chemin pointe
+            bien vers le dossier contenant le répertoire{" "}
             <code className="rounded bg-surface-700 px-1">Game</code>.
           </p>
         )}

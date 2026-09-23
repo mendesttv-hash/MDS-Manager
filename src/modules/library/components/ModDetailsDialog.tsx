@@ -1,6 +1,16 @@
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import { Calendar, FolderOpen, ImagePlus, Layers, Map, Pencil, Sword, Tag, User } from "lucide-react";
+import {
+  Calendar,
+  FolderOpen,
+  ImagePlus,
+  Layers,
+  Map,
+  Pencil,
+  Sword,
+  Tag,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button, Dialog } from "@/components";
@@ -76,7 +86,9 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
   }, [mod.id]);
 
   const displayTitle = customTitle.trim() || mod.displayName;
-  const displayImage = customMeta.customImage ? convertFileSrc(customMeta.customImage) : thumbnailUrl;
+  const displayImage = customMeta.customImage
+    ? convertFileSrc(customMeta.customImage)
+    : thumbnailUrl;
 
   const installedDate = new Date(mod.installedAt).toLocaleDateString(undefined, {
     year: "numeric",
@@ -152,7 +164,11 @@ function ModDetailsContent({ mod }: { mod: InstalledMod }) {
           </div>
 
           <div className="flex gap-2">
-            <Button variant="outline" left={<ImagePlus className="h-4 w-4" />} onClick={handleChooseImage}>
+            <Button
+              variant="outline"
+              left={<ImagePlus className="h-4 w-4" />}
+              onClick={handleChooseImage}
+            >
               Choisir une image
             </Button>
 

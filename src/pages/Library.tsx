@@ -111,20 +111,20 @@ export function Library({ folderId }: LibraryProps = {}) {
         />
       )}
       <LibraryToolbar
-  searchQuery={searchQuery}
-  onSearchChange={setSearchQuery}
-  actions={actions}
-  patcher={{
-    status: patcherStatus,
-    isStarting: isStarting,
-    isStopping: stopPatcher.isPending,
-    onStart: handleStartPatcher,
-    onStop: handleStopPatcher,
-  }}
-  hasEnabledMods={hasEnabledMods}
-  isLoading={isLoading}
-  isPatcherActive={isPatcherActive}
-  filterOptions={filterOptions}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        actions={actions}
+        patcher={{
+          status: patcherStatus,
+          isStarting: isStarting,
+          isStopping: stopPatcher.isPending,
+          onStart: handleStartPatcher,
+          onStop: handleStopPatcher,
+        }}
+        hasEnabledMods={hasEnabledMods}
+        isLoading={isLoading}
+        isPatcherActive={isPatcherActive}
+        filterOptions={filterOptions}
       />
       <LibraryContent
         mods={mods}

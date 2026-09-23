@@ -184,11 +184,7 @@ export function TitleBar({ title = "MDS Manager", appInfo }: TitleBarProps) {
               aria-label="Ouvrir RuneForge"
               title="Ouvrir RuneForge"
             >
-              <img
-                src="/runeforge-logo.png"
-                alt="RuneForge"
-                className="h-5 w-5 object-contain"
-              />
+              <img src="/runeforge-logo.png" alt="RuneForge" className="h-5 w-5 object-contain" />
             </button>
           </Tooltip>
 

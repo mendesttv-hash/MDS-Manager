@@ -210,9 +210,7 @@ function detectChampions(mod: InstalledMod): string[] {
       continue;
     }
 
-    const exact = ALL_CHAMPIONS.find(
-      (c) => normalize(c) === normalizedChamp,
-    );
+    const exact = ALL_CHAMPIONS.find((c) => normalize(c) === normalizedChamp);
 
     if (exact) detected.add(exact);
   }
@@ -222,9 +220,7 @@ function detectChampions(mod: InstalledMod): string[] {
   const normalizedText = normalize(text);
 
   if (normalizedText) {
-    const sorted = [...ALL_CHAMPIONS].sort(
-      (a, b) => normalize(b).length - normalize(a).length,
-    );
+    const sorted = [...ALL_CHAMPIONS].sort((a, b) => normalize(b).length - normalize(a).length);
 
     for (const champ of sorted) {
       if (normalizedText.includes(normalize(champ))) {
@@ -236,17 +232,9 @@ function detectChampions(mod: InstalledMod): string[] {
   return [...detected];
 }
 
-export function useFilteredMods(
-  mods: InstalledMod[],
-  searchQuery: string,
-): InstalledMod[] {
-  const {
-    selectedTags,
-    selectedChampions,
-    selectedMaps,
-    favoritesOnly,
-    sort,
-  } = useLibraryFilterStore();
+export function useFilteredMods(mods: InstalledMod[], searchQuery: string): InstalledMod[] {
+  const { selectedTags, selectedChampions, selectedMaps, favoritesOnly, sort } =
+    useLibraryFilterStore();
 
   return useMemo(() => {
     let result = mods;
@@ -255,24 +243,18 @@ export function useFilteredMods(
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
-        (mod) =>
-          mod.displayName.toLowerCase().includes(q) ||
-          mod.name.toLowerCase().includes(q),
+        (mod) => mod.displayName.toLowerCase().includes(q) || mod.name.toLowerCase().includes(q),
       );
     }
 
     // 🏷️ tags
     if (selectedTags.size > 0) {
-      result = result.filter((mod) =>
-        mod.tags.some((t) => selectedTags.has(t)),
-      );
+      result = result.filter((mod) => mod.tags.some((t) => selectedTags.has(t)));
     }
 
     // 🧠 champions (FIX ULTRA ROBUSTE)
     if (selectedChampions.size > 0) {
-      const normalizedSelected = new Set(
-        [...selectedChampions].map((c) => normalize(c)),
-      );
+      const normalizedSelected = new Set([...selectedChampions].map((c) => normalize(c)));
 
       result = result.filter((mod) => {
         const champs = detectChampions(mod);
@@ -282,26 +264,14 @@ export function useFilteredMods(
     }
 
     if (favoritesOnly) {
-      result = result.filter(
-        (mod) => getCustomModMeta(mod.id).favorite === true,
-      );
+      result = result.filter((mod) => getCustomModMeta(mod.id).favorite === true);
     }
 
     // 🗺️ maps
     if (selectedMaps.size > 0) {
-      result = result.filter((mod) =>
-        mod.maps.some((m) => selectedMaps.has(m)),
-      );
+      result = result.filter((mod) => mod.maps.some((m) => selectedMaps.has(m)));
     }
 
     return sortMods(result, sort);
-  }, [
-    mods,
-    searchQuery,
-    selectedTags,
-    selectedChampions,
-    selectedMaps,
-    favoritesOnly,
-    sort,
-  ]);
+  }, [mods, searchQuery, selectedTags, selectedChampions, selectedMaps, favoritesOnly, sort]);
 }

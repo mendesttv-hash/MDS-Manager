@@ -9,9 +9,7 @@ interface ThemePickerProps {
 export function ThemePicker({ settings, onSave }: ThemePickerProps) {
   return (
     <div className="space-y-3">
-      <span className="block text-sm font-medium text-surface-400">
-        Thème
-      </span>
+      <span className="block text-sm font-medium text-surface-400">Thème</span>
 
       <div className="flex gap-2">
         {(["system", "dark", "light"] as const).map((theme) => {

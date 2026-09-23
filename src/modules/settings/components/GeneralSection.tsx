@@ -11,8 +11,7 @@ interface GeneralSectionProps {
   onSave: (settings: Settings) => void;
 }
 
-export function GeneralSection({ settings, onSave }: GeneralSectionProps) 
-{
+export function GeneralSection({ settings, onSave }: GeneralSectionProps) {
   return (
     <div className="space-y-4">
       <LeaguePathSection settings={settings} onSave={onSave} />

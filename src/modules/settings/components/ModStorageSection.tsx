@@ -28,9 +28,7 @@ export function ModStorageSection({ settings, onSave }: ModStorageSectionProps) 
   return (
     <SectionCard title="Stockage des mods" icon={<HardDrive className="h-5 w-5" />}>
       <div className="space-y-3">
-        <span className="block text-sm font-medium text-surface-400">
-          Emplacement de stockage
-        </span>
+        <span className="block text-sm font-medium text-surface-400">Emplacement de stockage</span>
 
         <div className="flex gap-2">
           <Field.Control

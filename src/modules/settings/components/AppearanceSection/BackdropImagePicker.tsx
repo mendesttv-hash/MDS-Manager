@@ -37,9 +37,7 @@ export function BackdropImagePicker({ settings, onSave }: BackdropImagePickerPro
 
   return (
     <div className="space-y-3">
-      <span className="block text-sm font-medium text-surface-400">
-        Image de fond
-      </span>
+      <span className="block text-sm font-medium text-surface-400">Image de fond</span>
 
       <div className="flex gap-2">
         <Field.Control

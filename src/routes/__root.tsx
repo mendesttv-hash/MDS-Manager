@@ -36,9 +36,7 @@ function RootLayout() {
 
   useEffect(() => {
     const currentWindow =
-      typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
-        ? Window.getCurrent()
-        : null;
+      typeof window !== "undefined" && "__TAURI_INTERNALS__" in window ? Window.getCurrent() : null;
 
     if (update && settings?.startInTrayUnlessUpdate && currentWindow) {
       void currentWindow.show();
@@ -62,7 +60,7 @@ function RootLayout() {
       const input = document.querySelector<HTMLInputElement>('input[placeholder*="Search"]');
       input?.focus();
     },
-    { preventDefault: true, enableOnFormTags: true }
+    { preventDefault: true, enableOnFormTags: true },
   );
 
   useEffect(() => {

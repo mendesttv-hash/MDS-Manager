@@ -27,15 +27,9 @@ export function ProfileCreateForm() {
       setName("");
       setIsCreating(false);
 
-      toast.success(
-        "Profil créé",
-        `Le profil "${trimmedName}" a été créé avec succès.`,
-      );
+      toast.success("Profil créé", `Le profil "${trimmedName}" a été créé avec succès.`);
     } catch (error: unknown) {
-      toast.error(
-        "Erreur",
-        error instanceof Error ? error.message : String(error),
-      );
+      toast.error("Erreur", error instanceof Error ? error.message : String(error));
     }
   };
 
