@@ -1,4 +1,3 @@
-```tsx
 import type { InstalledMod } from "@/lib/tauri";
 import { useMemo } from "react";
 
