@@ -14,7 +14,7 @@ export function HotkeySection({ settings, onSave }: HotkeySectionProps) {
     <SectionCard title="Raccourcis" icon={<Keyboard className="h-5 w-5" />}>
       <div className="space-y-4">
         <p className="text-sm text-surface-400">
-          Raccourcis clavier globaux qui fonctionnent même lorsque l'application n'est pas au
+          Raccourcis clavier globaux qui fonctionnent même lorsque l&apos;application n&apos;est pas au
           premier plan. Pratique pour recharger rapidement les mods pendant vos tests en jeu.
         </p>
 
