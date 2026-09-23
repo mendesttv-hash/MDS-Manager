@@ -26,8 +26,8 @@ export function WatcherSection({ settings, onSave }: WatcherSectionProps) {
             </span>
             <span className="block text-sm text-surface-400">
               Détecte automatiquement lorsque des fichiers de mods sont ajoutés ou supprimés en
-              dehors de l'application et met à jour la bibliothèque. Nécessite un redémarrage pour
-              être pris en compte.
+              dehors de l&apos;application et met à jour la bibliothèque. Nécessite un redémarrage
+              pour être pris en compte.
             </span>
           </div>
           <Switch
