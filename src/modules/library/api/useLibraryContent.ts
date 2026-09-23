@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-
+```tsx
 import type { InstalledMod, LibraryFolder } from "@/lib/tauri";
+import { sortFolders, sortModsByFolder } from "@/modules/library/utils";
 import {
   CUSTOM_MOD_META_EVENT,
   getCustomModMeta,
   isFavorite,
 } from "@/modules/library/utils/customModMeta";
-import { sortFolders, sortModsByFolder } from "@/modules/library/utils";
 import { usePatcherStatus } from "@/modules/patcher";
 import { useHasActiveFilters, useLibraryFilterStore } from "@/stores";
 import { useLibraryViewStore } from "@/stores/libraryView";
+import { useEffect, useMemo, useState } from "react";
 
 import { useFolderOrder, useFolders } from "./queries";
 import { useFilteredMods } from "./useFilteredMods";
@@ -40,7 +40,12 @@ interface UseLibraryContentArgs {
 
 function getDisplaySortName(mod: InstalledMod) {
   const meta = getCustomModMeta(mod.id);
-  return (meta.customTitle?.trim() || mod.displayName || mod.name || "").toLowerCase();
+  return (
+    meta.customTitle?.trim() ||
+    mod.displayName ||
+    mod.name ||
+    ""
+  ).toLowerCase();
 }
 
 function sortFavoritesThenAlpha(mods: InstalledMod[]) {
@@ -76,7 +81,9 @@ export function useLibraryContent({
   const { sort } = useLibraryFilterStore();
   const { data: folders } = useFolders();
   const { data: folderOrder } = useFolderOrder();
-  const cleanupStaleFolders = useLibraryViewStore((s) => s.cleanupStaleFolders);
+  const cleanupStaleFolders = useLibraryViewStore(
+    (s) => s.cleanupStaleFolders,
+  );
 
   useEffect(() => {
     const handleMetaChange = () => setMetaVersion((v) => v + 1);
@@ -95,7 +102,11 @@ export function useLibraryContent({
 
   const isSearching = searchQuery.length > 0;
   const isPrioritySort = sort.field === "priority";
-  const dndDisabled = isSearching || isPatcherActive || !isPrioritySort || hasActiveFilters;
+  const dndDisabled =
+    isSearching ||
+    isPatcherActive ||
+    !isPrioritySort ||
+    hasActiveFilters;
   const isFlatMode = isSearching || hasActiveFilters;
 
   const folderMap = useMemo(() => {
@@ -144,7 +155,11 @@ export function useLibraryContent({
     if (hasError) return { type: "error" };
 
     if (sortedFilteredMods.length === 0 && orderedUserFolders.length === 0) {
-      return { type: "empty", hasSearch: isSearching, hasFilters: hasActiveFilters };
+      return {
+        type: "empty",
+        hasSearch: isSearching,
+        hasFilters: hasActiveFilters,
+      };
     }
 
     if (isFlatMode) {
@@ -153,7 +168,13 @@ export function useLibraryContent({
 
     if (folderId && folderId !== ROOT_FOLDER_ID) {
       const folder = folderMap.get(folderId);
-      if (!folder) return { type: "empty", hasSearch: false, hasFilters: false };
+      if (!folder) {
+        return {
+          type: "empty",
+          hasSearch: false,
+          hasFilters: false,
+        };
+      }
 
       return {
         type: "folder-drilldown",
