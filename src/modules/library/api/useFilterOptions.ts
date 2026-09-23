@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+```tsx
 import type { InstalledMod } from "@/lib/tauri";
+import { useMemo } from "react";
 
 export interface FilterOptions {
   tags: string[];
@@ -28,9 +29,10 @@ const ALL_CHAMPIONS = [
   "Senna","Seraphine","Sett","Shaco","Shen","Shyvana","Singed","Sion","Sivir",
   "Skarner","Smolder","Sona","Soraka","Swain","Sylas","Syndra","Tahm Kench",
   "Taliyah","Talon","Taric","Teemo","Thresh","Tristana","Trundle","Tryndamere",
-  "Twisted Fate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Vel'Koz","Vex","Vi","Viego","Viktor","Vladimir","Volibear","Warwick",
-"Wukong","Xayah","Xerath","Xin Zhao","Yasuo","Yone","Yorick","Yuumi","Yunara",
-"Zac","Zed","Zeri","Ziggs","Zilean","Zoe","Zyra","Zaahen",
+  "Twisted Fate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Vel'Koz","Vex",
+  "Vi","Viego","Viktor","Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath",
+  "Xin Zhao","Yasuo","Yone","Yorick","Yuumi","Yunara","Zac","Zed","Zeri","Ziggs",
+  "Zilean","Zoe","Zyra","Zaahen",
 ];
 
 export function useFilterOptions(mods: InstalledMod[]): FilterOptions {
@@ -49,4 +51,4 @@ export function useFilterOptions(mods: InstalledMod[]): FilterOptions {
       maps: [...maps].sort(),
     };
   }, [mods]);
-}
+};
