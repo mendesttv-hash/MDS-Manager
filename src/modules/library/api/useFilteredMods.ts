@@ -1,4 +1,3 @@
-```tsx
 import type { InstalledMod } from "@/lib/tauri";
 import { getCustomModMeta } from "@/modules/library/utils/customModMeta";
 import { sortMods } from "@/modules/library/utils";
